@@ -1,0 +1,44 @@
+target {
+    width : 400px;
+    margin : auto;
+    text-align: center;
+}
+
+#centeredImage {
+    margin-left:auto;
+    margin-right:auto;
+    float :none;
+}
+
+h1{
+    font-size: 100px;
+    color: rgb(0, 84, 87);
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+}
+
+h2{
+    color: rgb(0, 84, 87);
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+}
+
+a  {
+    color: black;
+    text-align: center;
+}
+
+h4{
+    font-size: 20px;
+    text-align: center;
+    margin:0px;
+    padding: 0px;
+}
+
+.parentDiv {  
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+} 
