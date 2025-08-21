@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetroAh - Your MRT Journey, Reimagined</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #1e3a8a, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-bg {
+            background-color: #ffffff;
+            background-image: radial-gradient(#dbeafe 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .card-hover-effect {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 border-b border-slate-200">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold gradient-text">MetroAh</h1>
+            <a href="#early-access" class="bg-blue-600 text-white font-semibold px-5 py-2 rounded-lg hover:bg-blue-700 transition-colors">Get Early Access</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-bg pt-32 pb-20 text-center">
+            <div class="container mx-auto px-6">
+                <span class="bg-blue-100 text-blue-700 text-sm font-semibold px-3 py-1 rounded-full">The Future of Commuting is Here</span>
+                <h2 class="text-4xl md:text-6xl font-extrabold mt-4 mb-6 text-slate-900">Your MRT Journey, Reimagined.</h2>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto text-slate-600 mb-8">
+                    Stop worrying about disruptions, crowded platforms, and confusing stations. MetroAh provides real-time alerts, smart routing, and seamless navigation for a stress-free commute.
+                </p>
+                <div class="flex justify-center gap-4">
+                    <a href="#early-access" class="bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg">Join the Beta</a>
+                    <a href="#features" class="bg-white border border-slate-300 text-slate-700 font-semibold px-8 py-3 rounded-lg hover:bg-slate-100 transition-colors text-lg">Learn More</a>
+                </div>
+                <!-- Phone Mockup -->
+                <div class="mt-16">
+                    <div class="relative mx-auto border-gray-800 dark:border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-2xl">
+                        <div class="w-[148px] h-[18px] bg-gray-800 top-0 rounded-b-[1rem] left-1/2 -translate-x-1/2 absolute"></div>
+                        <div class="h-[46px] w-[3px] bg-gray-800 absolute -left-[17px] top-[124px] rounded-l-lg"></div>
+                        <div class="h-[46px] w-[3px] bg-gray-800 absolute -left-[17px] top-[178px] rounded-l-lg"></div>
+                        <div class="h-[64px] w-[3px] bg-gray-800 absolute -right-[17px] top-[142px] rounded-r-lg"></div>
+                        <div class="rounded-[2rem] overflow-hidden w-full h-full bg-white">
+                            <!-- Placeholder for app screenshot -->
+                            <img src="https://placehold.co/300x600/3b82f6/ffffff?text=MetroAh+App" alt="App Screenshot" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x600/cccccc/ffffff?text=Image+Not+Found';">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem Section -->
+        <section class="py-20 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h3 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Tired of the Commuting Chaos?</h3>
+                <p class="text-lg text-slate-600 max-w-3xl mx-auto mb-12">
+                    Unexpected delays, confusing interchanges, and fragmented information make commuting a daily source of stress. You deserve a smarter way to travel.
+                </p>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Card 1: Disruptions -->
+                    <div class="bg-slate-50 p-8 rounded-xl border border-slate-200">
+                        <div class="bg-red-100 text-red-600 rounded-lg w-12 h-12 flex items-center justify-center mb-4 mx-auto">
+                            <i data-lucide="alert-triangle"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold mb-2">Unexpected Disruptions</h4>
+                        <p class="text-slate-600">Official alerts are often delayed, leaving you stranded on a crowded platform with no idea what to do next.</p>
+                    </div>
+                    <!-- Card 2: Navigation -->
+                    <div class="bg-slate-50 p-8 rounded-xl border border-slate-200">
+                        <div class="bg-yellow-100 text-yellow-600 rounded-lg w-12 h-12 flex items-center justify-center mb-4 mx-auto">
+                            <i data-lucide="map"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold mb-2">Confusing Stations</h4>
+                        <p class="text-slate-600">Navigating large interchanges like Dhoby Ghaut or finding the right exit can feel like solving a maze, especially during peak hours.</p>
+                    </div>
+                    <!-- Card 3: Multiple Apps -->
+                    <div class="bg-slate-50 p-8 rounded-xl border border-slate-200">
+                        <div class="bg-green-100 text-green-600 rounded-lg w-12 h-12 flex items-center justify-center mb-4 mx-auto">
+                            <i data-lucide="smartphone-nfc"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold mb-2">Information Overload</h4>
+                        <p class="text-slate-600">Juggling multiple apps for train times, disruption alerts, and route planning is inefficient and frustrating.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Solution / Features Section -->
+        <section id="features" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h3 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Introducing MetroAh: The All-in-One Solution</h3>
+                    <p class="text-lg text-slate-600 max-w-3xl mx-auto">
+                        MetroAh integrates every tool you need into one intelligent app, providing assistance at every stage of your journey.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Feature 1: Real-time Alerts -->
+                    <div class="bg-white p-6 rounded-lg border border-slate-200 card-hover-effect">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-100 text-blue-600 rounded-lg w-12 h-12 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="bell-ring"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold">Proactive Disruption Alerts</h4>
+                                <p class="text-slate-600 text-sm">Get instant, real-time notifications about delays, so you can adapt your route before you even leave.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Feature 2: AR Navigation -->
+                    <div class="bg-white p-6 rounded-lg border border-slate-200 card-hover-effect">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-100 text-blue-600 rounded-lg w-12 h-12 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="camera"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold">AR Live View Navigation</h4>
+                                <p class="text-slate-600 text-sm">Follow augmented reality directions to effortlessly find your platform, the nearest exit, or station amenities.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Feature 3: Smart Routing -->
+                    <div class="bg-white p-6 rounded-lg border border-slate-200 card-hover-effect">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-100 text-blue-600 rounded-lg w-12 h-12 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="git-fork"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold">Intelligent Route Planning</h4>
+                                <p class="text-slate-600 text-sm">Receive multiple route options that consider crowd levels and active disruptions, ensuring the fastest journey.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Feature 4: Nearest Door -->
+                    <div class="bg-white p-6 rounded-lg border border-slate-200 card-hover-effect">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-100 text-blue-600 rounded-lg w-12 h-12 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="door-open"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold">"Nearest Door" Guidance</h4>
+                                <p class="text-slate-600 text-sm">Know exactly which train car to board to minimize walking distance during transfers, saving you precious time.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Feature 5: Crowd Levels -->
+                    <div class="bg-white p-6 rounded-lg border border-slate-200 card-hover-effect">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-100 text-blue-600 rounded-lg w-12 h-12 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="users"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold">Real-Time Crowd Data</h4>
+                                <p class="text-slate-600 text-sm">Check station and platform crowd levels before you arrive to avoid the squeeze and travel in comfort.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Feature 6: Multi-Stop Journeys -->
+                    <div class="bg-white p-6 rounded-lg border border-slate-200 card-hover-effect">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-100 text-blue-600 rounded-lg w-12 h-12 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="list-ordered"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold">Multi-Stop Trip Planning</h4>
+                                <p class="text-slate-600 text-sm">Planning a day of errands? Add multiple destinations and let MetroAh calculate the most efficient route.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Personas Section -->
+        <section class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h3 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Built for Every Commuter</h3>
+                    <p class="text-lg text-slate-600 max-w-3xl mx-auto">
+                        Whether you travel daily or just occasionally, MetroAh is designed to solve your biggest commuting challenges.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <!-- Persona 1: Wei Ming -->
+                    <div class="bg-slate-50 p-8 rounded-xl border border-slate-200">
+                        <div class="flex items-center mb-4">
+                            <img src="https://placehold.co/64x64/e0e7ff/3730a3?text=WM" class="w-16 h-16 rounded-full mr-4" alt="Wei Ming">
+                            <div>
+                                <h4 class="text-xl font-bold">For Wei Ming, the Daily Commuter</h4>
+                                <p class="text-slate-500">Student, travels every day</p>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 mb-4">
+                            <span class="font-semibold text-red-600">Pain Point:</span> Being caught off-guard by disruptions, making him late for class.
+                        </p>
+                        <p class="text-slate-800 bg-green-100 p-4 rounded-lg border border-green-200">
+                            <span class="font-semibold text-green-700">MetroAh's Solution:</span> Proactive alerts notify him of a delay on his line. The app instantly suggests an alternative route, considering crowd levels, ensuring he still gets to his exam on time.
+                        </p>
+                    </div>
+                    <!-- Persona 2: Mrs. Lim -->
+                    <div class="bg-slate-50 p-8 rounded-xl border border-slate-200">
+                        <div class="flex items-center mb-4">
+                            <img src="https://placehold.co/64x64/e0e7ff/3730a3?text=ML" class="w-16 h-16 rounded-full mr-4" alt="Mrs. Lim">
+                            <div>
+                                <h4 class="text-xl font-bold">For Mrs. Lim, the Occasional Traveler</h4>
+                                <p class="text-slate-500">Explorer, unfamiliar with interchanges</p>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 mb-4">
+                            <span class="font-semibold text-red-600">Pain Point:</span> Getting lost in large, unfamiliar stations and not knowing which exit to take.
+                        </p>
+                        <p class="text-slate-800 bg-green-100 p-4 rounded-lg border border-green-200">
+                            <span class="font-semibold text-green-700">MetroAh's Solution:</span> Upon arrival, she uses the AR Live View. Her phone's camera shows clear, overlaid directions guiding her step-by-step to the correct exit to meet her friends, stress-free.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA Section -->
+        <section id="early-access" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="bg-blue-600 rounded-2xl p-12 text-center text-white">
+                    <h3 class="text-3xl md:text-4xl font-bold mb-4">Be the First to Experience MetroAh</h3>
+                    <p class="text-blue-100 max-w-2xl mx-auto mb-8">
+                        Sign up for our beta program to get early access and help us shape the future of commuting in Singapore.
+                    </p>
+                    <form class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-lg mx-auto">
+                        <input type="email" placeholder="Enter your email" class="w-full px-5 py-3 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-300 focus:outline-none" required>
+                        <button type="submit" class="w-full sm:w-auto bg-white text-blue-600 font-semibold px-8 py-3 rounded-lg hover:bg-blue-50 transition-colors flex-shrink-0">Request Access</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>&copy; 2025 MetroAh. All rights reserved.</p>
+            <p class="text-sm mt-2">A project by Bryan Seah & Eileen Tan.</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
