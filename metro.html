@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>sgRails</title>
+    <title>MetroAh</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -80,6 +80,44 @@
             padding: 4px 8px;
             border-radius: 4px;
             display: inline-block;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .color-hex:hover {
+            background: #e2e8f0;
+            color: #475569;
+            transform: scale(1.05);
+        }
+        .color-hex:active {
+            transform: scale(0.95);
+        }
+        .copy-feedback {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .copy-feedback.show {
+            opacity: 1;
+        }
+        .copy-feedback::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid transparent;
+            border-top-color: #0f172a;
         }
         .toggle-button {
             background: linear-gradient(to right, #1e3a8a, #3b82f6);
@@ -110,7 +148,7 @@
     <!-- Header -->
     <header class="bg-white/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 border-b border-slate-200">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold gradient-text">sgRails</h1>
+            <h1 class="text-2xl font-bold gradient-text">MetroAh</h1>
             <a href="#early-access" class="bg-blue-600 text-white font-semibold px-5 py-2 rounded-lg hover:bg-blue-700 transition-colors">Get Early Access</a>
         </div>
     </header>
@@ -120,9 +158,9 @@
         <section class="hero-bg pt-32 pb-20 text-center">
             <div class="container mx-auto px-6">
                 <span class="bg-blue-100 text-blue-700 text-sm font-semibold px-3 py-1 rounded-full">The Future of Commuting is Here</span>
-                <h2 class="text-4xl md:text-6xl font-extrabold mt-4 mb-6 text-slate-900">Your Train Journeys, Reimagined.</h2>
+                <h2 class="text-4xl md:text-6xl font-extrabold mt-4 mb-6 text-slate-900">Your MRT Journey, Reimagined.</h2>
                 <p class="text-lg md:text-xl max-w-3xl mx-auto text-slate-600 mb-8">
-                    Stop worrying about disruptions, crowded platforms, and confusing stations. sgRails provides real-time alerts, smart routing, and seamless navigation for a stress-free commute.
+                    Stop worrying about disruptions, crowded platforms, and confusing stations. MetroAh provides real-time alerts, smart routing, and seamless navigation for a stress-free commute.
                 </p>
                 <div class="flex justify-center gap-4">
                     <a href="#early-access" class="bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg">Join the Beta</a>
@@ -137,7 +175,7 @@
                         <div class="h-[64px] w-[3px] bg-gray-800 absolute -right-[17px] top-[142px] rounded-r-lg"></div>
                         <div class="rounded-[2rem] overflow-hidden w-full h-full bg-white">
                             <!-- Placeholder for app screenshot -->
-                            <img src="https://placehold.co/300x600/3b82f6/ffffff?text=sgRails+App" alt="App Screenshot" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x600/cccccc/ffffff?text=Image+Not+Found';">
+                            <img src="https://placehold.co/300x600/3b82f6/ffffff?text=MetroAh+App" alt="App Screenshot" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x600/cccccc/ffffff?text=Image+Not+Found';">
                         </div>
                     </div>
                 </div>
@@ -184,9 +222,9 @@
         <section id="features" class="py-20">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
-                    <h3 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Introducing sgRails: The All-in-One Solution</h3>
+                    <h3 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Introducing MetroAh: The All-in-One Solution</h3>
                     <p class="text-lg text-slate-600 max-w-3xl mx-auto">
-                        sgRails integrates every tool you need into one intelligent app, providing assistance at every stage of your journey.
+                        MetroAh integrates every tool you need into one intelligent app, providing assistance at every stage of your journey.
                     </p>
                 </div>
 
@@ -259,7 +297,7 @@
                             </div>
                             <div>
                                 <h4 class="text-lg font-semibold">Multi-Stop Trip Planning</h4>
-                                <p class="text-slate-600 text-sm">Planning a day of errands? Add multiple destinations and let sgRails calculate the most efficient route.</p>
+                                <p class="text-slate-600 text-sm">Planning a day of errands? Add multiple destinations and let MetroAh calculate the most efficient route.</p>
                             </div>
                         </div>
                     </div>
@@ -273,7 +311,7 @@
                 <div class="text-center mb-16">
                     <h3 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Built for Every Commuter</h3>
                     <p class="text-lg text-slate-600 max-w-3xl mx-auto">
-                        Whether you travel daily or just occasionally, sgRails is designed to solve your biggest commuting challenges.
+                        Whether you travel daily or just occasionally, MetroAh is designed to solve your biggest commuting challenges.
                     </p>
                 </div>
                 <div class="grid md:grid-cols-2 gap-12">
@@ -314,94 +352,144 @@
         </section>
         
         <!-- Design System / Color Palette Section -->
-        <section class="py-12 bg-slate-50">
+        <section class="py-20 bg-slate-50">
             <div class="container mx-auto px-6">
-                <div class="text-center mb-8">
-                    <div class="flex justify-center items-center gap-4 mb-4">
-                        <h3 class="text-2xl font-bold text-slate-900">Design System</h3>
-                        <button id="paletteToggle" class="toggle-button">
-                            <span>View Color Palette</span>
-                            <i data-lucide="chevron-down" class="toggle-icon"></i>
-                        </button>
-                    </div>
-                    <p class="text-slate-600 max-w-2xl mx-auto">
-                        Explore the carefully crafted color system that powers sgRails's clean, accessible interface.
+                <div class="text-center mb-16">
+                    <h3 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Design System & Color Palette</h3>
+                    <p class="text-lg text-slate-600 max-w-3xl mx-auto mb-8">
+                        Explore the carefully crafted color system that powers MetroAh's clean, accessible interface. Each color is thoughtfully chosen to enhance usability and create a cohesive visual experience across all touchpoints.
                     </p>
+                    <button id="paletteToggle" class="toggle-button">
+                        <span>View Color Palette</span>
+                        <i data-lucide="chevron-down" class="toggle-icon"></i>
+                    </button>
                 </div>
 
                 <div id="paletteSection" class="palette-section">
-                    <div class="palette-grid">
-                        <!-- Primary Colors -->
-                        <div class="color-swatch">
-                            <div class="color-label">Gradient Start</div>
-                            <div class="color-box" style="background: #1e3a8a;"></div>
-                            <div class="color-hex">#1e3a8a</div>
-                        </div>
-                        <div class="color-swatch">
-                            <div class="color-label">Gradient End / App Blue</div>
-                            <div class="color-box" style="background: #3b82f6;"></div>
-                            <div class="color-hex">#3b82f6</div>
-                        </div>
-                        <div class="color-swatch">
-                            <div class="color-label">CTA Primary</div>
-                            <div class="color-box" style="background: #2563eb;"></div>
-                            <div class="color-hex">#2563eb</div>
-                        </div>
-                        <div class="color-swatch">
-                            <div class="color-label">CTA Hover</div>
-                            <div class="color-box" style="background: #1d4ed8;"></div>
-                            <div class="color-hex">#1d4ed8</div>
-                        </div>
+                    <div class="bg-white p-8 rounded-xl border border-slate-200 mb-8">
+                        <h4 class="text-xl font-semibold text-slate-900 mb-4 text-center">Interactive Color Swatches</h4>
+                        <p class="text-center text-slate-600 mb-6">Click any hex code to copy it to your clipboard</p>
+                        
+                        <div class="palette-grid">
+                            <!-- Primary Colors -->
+                            <div class="color-swatch">
+                                <div class="color-label">Gradient Start</div>
+                                <div class="color-box" style="background: #1e3a8a;"></div>
+                                <div class="color-hex" data-color="#1e3a8a">
+                                    #1e3a8a
+                                    <div class="copy-feedback">Copied!</div>
+                                </div>
+                            </div>
+                            <div class="color-swatch">
+                                <div class="color-label">Gradient End / App Blue</div>
+                                <div class="color-box" style="background: #3b82f6;"></div>
+                                <div class="color-hex" data-color="#3b82f6">
+                                    #3b82f6
+                                    <div class="copy-feedback">Copied!</div>
+                                </div>
+                            </div>
+                            <div class="color-swatch">
+                                <div class="color-label">CTA Primary</div>
+                                <div class="color-box" style="background: #2563eb;"></div>
+                                <div class="color-hex" data-color="#2563eb">
+                                    #2563eb
+                                    <div class="copy-feedback">Copied!</div>
+                                </div>
+                            </div>
+                            <div class="color-swatch">
+                                <div class="color-label">CTA Hover</div>
+                                <div class="color-box" style="background: #1d4ed8;"></div>
+                                <div class="color-hex" data-color="#1d4ed8">
+                                    #1d4ed8
+                                    <div class="copy-feedback">Copied!</div>
+                                </div>
+                            </div>
 
-                        <!-- Neutral Colors -->
-                        <div class="color-swatch">
-                            <div class="color-label">Background</div>
-                            <div class="color-box" style="background: #f8fafc;"></div>
-                            <div class="color-hex">#f8fafc</div>
-                        </div>
-                        <div class="color-swatch">
-                            <div class="color-label">Borders</div>
-                            <div class="color-box" style="background: #e2e8f0;"></div>
-                            <div class="color-hex">#e2e8f0</div>
-                        </div>
-                        <div class="color-swatch">
-                            <div class="color-label">Text Secondary</div>
-                            <div class="color-box" style="background: #475569;"></div>
-                            <div class="color-hex">#475569</div>
-                        </div>
-                        <div class="color-swatch">
-                            <div class="color-label">Text Primary</div>
-                            <div class="color-box" style="background: #0f172a;"></div>
-                            <div class="color-hex">#0f172a</div>
-                        </div>
+                            <!-- Neutral Colors -->
+                            <div class="color-swatch">
+                                <div class="color-label">Background</div>
+                                <div class="color-box" style="background: #f8fafc;"></div>
+                                <div class="color-hex" data-color="#f8fafc">
+                                    #f8fafc
+                                    <div class="copy-feedback">Copied!</div>
+                                </div>
+                            </div>
+                            <div class="color-swatch">
+                                <div class="color-label">Borders</div>
+                                <div class="color-box" style="background: #e2e8f0;"></div>
+                                <div class="color-hex" data-color="#e2e8f0">
+                                    #e2e8f0
+                                    <div class="copy-feedback">Copied!</div>
+                                </div>
+                            </div>
+                            <div class="color-swatch">
+                                <div class="color-label">Text Secondary</div>
+                                <div class="color-box" style="background: #475569;"></div>
+                                <div class="color-hex" data-color="#475569">
+                                    #475569
+                                    <div class="copy-feedback">Copied!</div>
+                                </div>
+                            </div>
+                            <div class="color-swatch">
+                                <div class="color-label">Text Primary</div>
+                                <div class="color-box" style="background: #0f172a;"></div>
+                                <div class="color-hex" data-color="#0f172a">
+                                    #0f172a
+                                    <div class="copy-feedback">Copied!</div>
+                                </div>
+                            </div>
 
-                        <!-- Accent Colors -->
-                        <div class="color-swatch">
-                            <div class="color-label">Success Light</div>
-                            <div class="color-box" style="background: #dcfce7;"></div>
-                            <div class="color-hex">#dcfce7</div>
-                        </div>
-                        <div class="color-swatch">
-                            <div class="color-label">Success Dark</div>
-                            <div class="color-box" style="background: #15803d;"></div>
-                            <div class="color-hex">#15803d</div>
-                        </div>
-                        <div class="color-swatch">
-                            <div class="color-label">Warning Light</div>
-                            <div class="color-box" style="background: #fef3c7;"></div>
-                            <div class="color-hex">#fef3c7</div>
-                        </div>
-                        <div class="color-swatch">
-                            <div class="color-label">Error Light</div>
-                            <div class="color-box" style="background: #fee2e2;"></div>
-                            <div class="color-hex">#fee2e2</div>
+                            <!-- Accent Colors -->
+                            <div class="color-swatch">
+                                <div class="color-label">Success Light</div>
+                                <div class="color-box" style="background: #dcfce7;"></div>
+                                <div class="color-hex" data-color="#dcfce7">
+                                    #dcfce7
+                                    <div class="copy-feedback">Copied!</div>
+                                </div>
+                            </div>
+                            <div class="color-swatch">
+                                <div class="color-label">Success Dark</div>
+                                <div class="color-box" style="background: #15803d;"></div>
+                                <div class="color-hex" data-color="#15803d">
+                                    #15803d
+                                    <div class="copy-feedback">Copied!</div>
+                                </div>
+                            </div>
+                            <div class="color-swatch">
+                                <div class="color-label">Warning Light</div>
+                                <div class="color-box" style="background: #fef3c7;"></div>
+                                <div class="color-hex" data-color="#fef3c7">
+                                    #fef3c7
+                                    <div class="copy-feedback">Copied!</div>
+                                </div>
+                            </div>
+                            <div class="color-swatch">
+                                <div class="color-label">Error Light</div>
+                                <div class="color-box" style="background: #fee2e2;"></div>
+                                <div class="color-hex" data-color="#fee2e2">
+                                    #fee2e2
+                                    <div class="copy-feedback">Copied!</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="text-center pt-4 border-t border-slate-200">
-                        <p class="text-sm text-slate-500">
-                            Built with accessibility and modern design principles in mind
-                        </p>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="bg-white p-6 rounded-xl border border-slate-200">
+                            <h5 class="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                                <div class="w-3 h-3 rounded-full bg-blue-600"></div>
+                                Accessibility First
+                            </h5>
+                            <p class="text-slate-600 text-sm">All color combinations meet WCAG AA standards for contrast, ensuring readability for users with visual impairments.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl border border-slate-200">
+                            <h5 class="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                                <div class="w-3 h-3 rounded-full bg-green-600"></div>
+                                Consistent Branding
+                            </h5>
+                            <p class="text-slate-600 text-sm">Carefully chosen blues evoke trust and reliability, while maintaining consistency across all MetroAh touchpoints.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -411,7 +499,7 @@
         <section id="early-access" class="py-20">
             <div class="container mx-auto px-6">
                 <div class="bg-blue-600 rounded-2xl p-12 text-center text-white">
-                    <h3 class="text-3xl md:text-4xl font-bold mb-4">Be the First to Experience sgRails</h3>
+                    <h3 class="text-3xl md:text-4xl font-bold mb-4">Be the First to Experience MetroAh</h3>
                     <p class="text-blue-100 max-w-2xl mx-auto mb-8">
                         Sign up for our beta program to get early access and help us shape the future of commuting in Singapore.
                     </p>
@@ -428,7 +516,7 @@
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-400">
         <div class="container mx-auto px-6 py-8 text-center">
-            <p>&copy; 2025 sgRails. All rights reserved.</p>
+            <p>&copy; 2025 MetroAh. All rights reserved.</p>
             <p class="text-sm mt-2">An idea by Bryan & Eileen.</p>
         </div>
     </footer>
@@ -457,6 +545,53 @@
                     toggleIcon.classList.add('rotated');
                     toggleText.textContent = 'Hide Color Palette';
                 }
+            });
+
+            // Hex code copy functionality
+            const hexElements = document.querySelectorAll('.color-hex[data-color]');
+            
+            hexElements.forEach(hexElement => {
+                hexElement.addEventListener('click', async function() {
+                    const colorCode = this.getAttribute('data-color');
+                    const feedback = this.querySelector('.copy-feedback');
+                    
+                    try {
+                        // Try modern clipboard API first
+                        if (navigator.clipboard && window.isSecureContext) {
+                            await navigator.clipboard.writeText(colorCode);
+                        } else {
+                            // Fallback for older browsers
+                            const textArea = document.createElement('textarea');
+                            textArea.value = colorCode;
+                            textArea.style.position = 'fixed';
+                            textArea.style.left = '-999999px';
+                            textArea.style.top = '-999999px';
+                            document.body.appendChild(textArea);
+                            textArea.focus();
+                            textArea.select();
+                            document.execCommand('copy');
+                            textArea.remove();
+                        }
+                        
+                        // Show feedback
+                        feedback.classList.add('show');
+                        
+                        // Hide feedback after 1.5 seconds
+                        setTimeout(() => {
+                            feedback.classList.remove('show');
+                        }, 1500);
+                        
+                    } catch (err) {
+                        console.error('Failed to copy: ', err);
+                        // Fallback feedback for copy failure
+                        feedback.textContent = 'Copy failed';
+                        feedback.classList.add('show');
+                        setTimeout(() => {
+                            feedback.classList.remove('show');
+                            feedback.textContent = 'Copied!';
+                        }, 1500);
+                    }
+                });
             });
         });
     </script>
