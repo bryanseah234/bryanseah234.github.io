@@ -533,6 +533,54 @@
                     opacity: 0.9;
                     margin-top: 5px;
                 }
+
+                /* Modal styles */
+                .image-modal {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: fixed;
+                    z-index: 9999;
+                    left: 0;
+                    top: 0;
+                    width: 100vw;
+                    height: 100vh;
+                    background: rgba(0,0,0,0.85);
+                    flex-direction: column;
+                    transition: opacity 0.3s;
+                }
+
+                .image-modal .modal-content {
+                    max-width: 90vw;
+                    max-height: 80vh;
+                    border-radius: 15px;
+                    box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+                    margin-bottom: 20px;
+                    object-fit: contain;
+                }
+
+                .image-modal .modal-caption {
+                    color: #ffd700;
+                    font-size: 1.3rem;
+                    text-align: center;
+                    margin-bottom: 10px;
+                }
+
+                .image-modal .modal-close {
+                    position: absolute;
+                    top: 30px;
+                    right: 40px;
+                    color: #fff;
+                    font-size: 2.5rem;
+                    font-weight: bold;
+                    cursor: pointer;
+                    z-index: 10001;
+                    transition: color 0.2s;
+                }
+
+                .image-modal .modal-close:hover {
+                    color: #ff6b6b;
+                }
             </style>
         </head>
         <body>
@@ -598,6 +646,13 @@
                     <div class="image-grid" id="image-grid"></div>
                 </div>
             </section>
+
+            <!-- Modal for full image view -->
+            <div id="image-modal" class="image-modal" style="display:none;">
+                <span class="modal-close" id="modal-close">&times;</span>
+                <img class="modal-content" id="modal-img" src="" alt="Full Image" />
+                <div class="modal-caption" id="modal-caption"></div>
+            </div>
 
             <script>
                 const songsData = [
@@ -741,8 +796,30 @@
                         const imageCard = document.createElement('div');
                         imageCard.className = 'image-card';
                         imageCard.innerHTML = `<img src="${item.img}" alt="${item.title}"><div>${item.title}</div>`;
+                        // Add click event to open modal
+                        imageCard.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            openImageModal(item.img, item.title);
+                        });
                         imageGrid.appendChild(imageCard);
                     });
+                }
+
+                // Modal logic
+                function openImageModal(imgSrc, caption) {
+                    const modal = document.getElementById('image-modal');
+                    const modalImg = document.getElementById('modal-img');
+                    const modalCaption = document.getElementById('modal-caption');
+                    modalImg.src = imgSrc;
+                    modalCaption.textContent = caption || '';
+                    modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+
+                function closeImageModal() {
+                    const modal = document.getElementById('image-modal');
+                    modal.style.display = 'none';
+                    document.body.style.overflow = '';
                 }
 
                 function createHeartBurst() {
@@ -833,6 +910,25 @@
                     // Gallery click effects
                     document.addEventListener('click', (e) => {
                         if (e.target.closest('.image-card')) createHeartBurst();
+                    });
+
+                    // Modal close button
+                    const modalClose = document.getElementById('modal-close');
+                    if (modalClose) {
+                        modalClose.addEventListener('click', closeImageModal);
+                    }
+                    
+                    // Close modal on outside click
+                    const modal = document.getElementById('image-modal');
+                    if (modal) {
+                        modal.addEventListener('click', function(e) {
+                            if (e.target === modal) closeImageModal();
+                        });
+                    }
+                    
+                    // Close modal on ESC key
+                    document.addEventListener('keydown', function(e) {
+                        if (e.key === 'Escape') closeImageModal();
                     });
                 }
 
