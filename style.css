@@ -27,7 +27,7 @@ button:hover {
 
 img {
     height: auto;
-    width: 4%;
+    width: 10%;
     /* display: block;
     margin: auto; */
 }
@@ -41,12 +41,14 @@ button:active {
     color: gray;
     margin: auto;
     text-align: right;
+    width: 50%;
 }
 
 .video {
     margin: auto;
     font-weight: bold;
     text-align: left;
+    width: 50%;
 }
 
 a {
