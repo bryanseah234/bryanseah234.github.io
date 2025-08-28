@@ -1,44 +1,47 @@
-target {
-    width : 400px;
-    margin : auto;
-    text-align: center;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* makes it easier to style elements */
 }
 
-#centeredImage {
-    margin-left:auto;
-    margin-right:auto;
-    float :none;
+button {
+    color: white;
+    background-color: black;
+    border: 4px dotted black;
+    padding: 10px 20px;
+    cursor: pointer;
+    display: block;
+    margin: auto;
 }
 
-h1{
-    font-size: 100px;
-    color: rgb(0, 84, 87);
-    text-align: center;
-    margin: 0px;
-    padding: 0px;
+button:hover {
+    background-color: darkgray;
 }
 
-h2{
-    color: rgb(0, 84, 87);
-    text-align: center;
-    margin: 0px;
-    padding: 0px;
+image {
+    height: auto;
+    width: 20%;
+    display: block;
+    margin: auto;
 }
 
-a  {
-    color: black;
-    text-align: center;
+button:active {
+    background-color: gray;
+    transform: translateY(2px);
 }
 
-h4{
-    font-size: 20px;
-    text-align: center;
-    margin:0px;
-    padding: 0px;
+.bio {
+    font-style: italic;
+    color: gray;
 }
 
-.parentDiv {  
-    display: flex; 
-    justify-content: center; 
-    align-items: center;
-} 
+.video {
+    margin: auto;
+    width: 50%;
+    height: auto;
+}
+
+a {
+    color: red;
+    text-decoration: solid underline;
+}
