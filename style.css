@@ -20,25 +20,25 @@ button:hover {
 
 image {
     height: auto;
-    width: 20%;
-    display: block;
+    width: 4%;
+    display: inline;
     margin: auto;
 }
 
 button:active {
-    background-color: gray;
+    background-color: red;
     transform: translateY(2px);
 }
 
 .bio {
     font-style: italic;
     color: gray;
+    margin: right;
 }
 
 .video {
-    margin: auto;
-    width: 50%;
-    height: auto;
+    margin: left;
+    font-style: bold;
 }
 
 a {
