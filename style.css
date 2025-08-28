@@ -28,8 +28,8 @@ button:hover {
 image {
     height: auto;
     width: 4%;
-    display: block;
-    margin: auto;
+    /* display: block; */
+    /* margin: auto; */
 }
 
 button:active {
