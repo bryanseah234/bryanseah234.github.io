@@ -9,7 +9,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
+    /* text-align: center; */
 }
 
 button {
@@ -47,7 +47,7 @@ button:active {
 
 .video {
     margin: auto;
-    font-style: bold;
+    font-weight: bold;
     text-align: left;
 }
 
