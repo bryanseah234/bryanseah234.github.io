@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+body {
+    margin: auto;
+}
+
 button {
     color: white;
     background-color: black;
@@ -20,7 +24,7 @@ button:hover {
 image {
     height: auto;
     width: 4%;
-    display: inline;
+    display: block;
     margin: auto;
 }
 
@@ -32,12 +36,14 @@ button:active {
 .bio {
     font-style: italic;
     color: gray;
-    margin: right;
+    margin: auto;
+    text-align: right;
 }
 
 .video {
-    margin: left;
+    margin: auto;
     font-style: bold;
+    text-align: left;
 }
 
 a {
