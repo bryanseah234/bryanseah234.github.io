@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Coca-Cola</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --coke-red: #C70007;
+            --coke-white: #EFE6DE;
+            --coke-black: #250002; /* A slightly softer black for the liquid */
+        }
+
+        /* Basic setup and mobile-first approach */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--coke-red);
+            font-family: 'Teko', sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Disable tap highlight on mobile */
+        }
+
+        /* Main game container */
+        .game-world {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* The liquid that will be "poured" */
+        #liquid {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--coke-black);
+            transition: height 0.3s ease-out;
+            z-index: 10;
+        }
+        
+        /* Bubbles for effect */
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            bottom: -20px;
+            animation: rise 10s infinite ease-in;
+            z-index: 11;
+        }
+
+        @keyframes rise {
+            0% {
+                bottom: -20px;
+                transform: translateX(0);
+            }
+            100% {
+                bottom: 105vh;
+                transform: translateX(calc(var(--x-offset) * 1px));
+            }
+        }
+
+        /* Screens: Start, End, and Desktop Warning */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--coke-white);
+            z-index: 100;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: var(--coke-red);
+            transition: opacity 0.5s ease;
+        }
+
+        .screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .screen h1 {
+            font-size: 3rem;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        
+        .screen h2 {
+            font-size: 4rem;
+            margin: 10px 0;
+        }
+
+        .screen p {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        /* The retry button on the end screen */
+        #retryButton {
+            margin-top: 30px;
+            padding: 15px 40px;
+            font-size: 1.8rem;
+            font-family: 'Teko', sans-serif;
+            color: var(--coke-red);
+            background-color: var(--coke-white);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.1s ease;
+        }
+        
+        #retryButton:active {
+            transform: scale(0.95);
+        }
+
+        /* Desktop Warning: Hide game and show message on larger screens */
+        #desktop-warning {
+            display: none; /* Hidden by default */
+        }
+
+        @media (min-width: 769px) {
+            .game-world {
+                display: none;
+            }
+            #desktop-warning {
+                display: flex;
+                background-color: var(--coke-black);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- This message shows only on desktop -->
+    <div id="desktop-warning" class="screen">
+        <h1>This experience is designed for mobile only.</h1>
+        <p>Please visit on your smartphone to play.</p>
+    </div>
+
+    <!-- The main container for the game -->
+    <div class="game-world">
+        <!-- The liquid element -->
+        <div id="liquid"></div>
+
+        <!-- The initial screen to request sensor access -->
+        <div id="start-screen" class="screen">
+            <h1>The Drinkable Ad</h1>
+            <p>Tilt or shake your phone to drink.</p>
+            <button id="start-button" style="background:none; border:none; color:white; padding: 20px; font-size: 1.5rem; font-family: 'Teko', sans-serif;">Tap to Begin</button>
+        </div>
+
+        <!-- The end screen with time and retry button -->
+        <div id="end-screen" class="screen hidden">
+            <h1>Cheers!</h1>
+            <p>Your Time:</p>
+            <h2 id="final-time">0.00s</h2>
+            <button id="retryButton">Try Again</button>
+        </div>
+    </div>
+
+    <script>
+        const liquid = document.getElementById('liquid');
+        const startScreen = document.getElementById('start-screen');
+        const endScreen = document.getElementById('end-screen');
+        const startButton = document.getElementById('start-button');
+        const retryButton = document.getElementById('retryButton');
+        const finalTimeDisplay = document.getElementById('final-time');
+
+        // Game state variables
+        let liquidLevel = 100; // a percentage
+        let startTime = 0;
+        let gameActive = false;
+        let motionEventFired = false; // Flag to check if sensor events are coming through
+        
+        // Motion sensitivity. Higher number = less sensitive
+        const motionThreshold = 15; 
+
+        // Function to create and animate bubbles
+        const createBubbles = () => {
+            const bubbleCount = 20;
+            // Clear any existing bubbles before adding new ones
+            liquid.querySelectorAll('.bubble').forEach(b => b.remove());
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                const size = Math.random() * 15 + 5; // 5px to 20px
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.animationDuration = `${Math.random() * 5 + 5}s`; // 5s to 10s
+                bubble.style.animationDelay = `${Math.random() * 5}s`;
+                // Custom property for horizontal drift
+                bubble.style.setProperty('--x-offset', (Math.random() - 0.5) * 100);
+                liquid.appendChild(bubble);
+            }
+        };
+
+        // This is the core function that handles the motion detection
+        const handleMotion = (event) => {
+            motionEventFired = true; // Set flag on first registered event
+            if (!gameActive) return;
+
+            const accel = event.accelerationIncludingGravity;
+            // Calculate magnitude of acceleration vector
+            const magnitude = Math.sqrt(accel.x ** 2 + accel.y ** 2 + accel.z ** 2);
+            
+            if (magnitude > motionThreshold) {
+                liquidLevel -= 1.5; // Decrease liquid level on shake
+                if (liquidLevel < 0) {
+                    liquidLevel = 0;
+                }
+                liquid.style.height = `${liquidLevel}%`;
+
+                if (liquidLevel <= 0) {
+                    endGame();
+                }
+            }
+        };
+
+        const startGame = () => {
+            // Disable button to prevent multiple clicks while permission prompt is active
+            startButton.disabled = true;
+            
+            // CRITICAL CHECK: Motion sensors require a secure context (HTTPS)
+            if (window.isSecureContext === false) {
+                const startScreenText = startScreen.querySelector('p');
+                startButton.style.display = 'none'; // Hide the button
+                startScreenText.innerHTML = "<strong>Error:</strong> This experience requires a secure connection (HTTPS).<br>Please ensure the URL starts with 'https://'.";
+                return; // Stop execution
+            }
+
+            startButton.textContent = 'Checking...';
+
+            // Check for DeviceMotionEvent and request permission if needed (for iOS 13+)
+            if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+                DeviceMotionEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            window.addEventListener('devicemotion', handleMotion);
+                            runGame();
+                        } else {
+                            // Show error on the start screen if permission is denied
+                            const startScreenText = startScreen.querySelector('p');
+                            startButton.style.display = 'none'; // Hide the button
+                            startScreenText.innerHTML = "Permission for motion sensors was denied.<br>Please check your browser or device settings.";
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        const startScreenText = startScreen.querySelector('p');
+                        startButton.style.display = 'none';
+                        startScreenText.textContent = "Could not get sensor permissions.";
+                    });
+            } else {
+                // For Android and other devices that don't need explicit permission
+                window.addEventListener('devicemotion', handleMotion);
+                runGame();
+            }
+        };
+
+        const runGame = () => {
+            liquidLevel = 100;
+            motionEventFired = false; // Reset flag for each new game
+            liquid.style.transition = 'height 0.3s ease-out'; // Re-apply transition for gameplay
+            liquid.style.height = '100%';
+            startScreen.classList.add('hidden');
+            endScreen.classList.add('hidden');
+            createBubbles();
+            
+            // Short delay to allow screen transition
+            setTimeout(() => {
+                gameActive = true;
+                startTime = performance.now();
+
+                // After a short period, check if motion events were ever fired.
+                // This handles cases where permissions are granted but events are blocked (e.g., in some iframes).
+                setTimeout(() => {
+                    if (!motionEventFired && gameActive) {
+                        showMotionError("Motion could not be detected. Your device might not support it or access is blocked.");
+                    }
+                }, 2000); // Check after 2 seconds
+
+            }, 500);
+        };
+
+        const showMotionError = (message) => {
+            if (!gameActive) return;
+            gameActive = false;
+            window.removeEventListener('devicemotion', handleMotion);
+
+            endScreen.querySelector('h1').textContent = "Oops!";
+            endScreen.querySelector('p').textContent = message;
+            finalTimeDisplay.style.display = 'none'; // Hide the time display
+
+            endScreen.classList.remove('hidden');
+        };
+
+        const endGame = () => {
+            if (!gameActive) return; // Prevent endGame from running multiple times or after an error
+            gameActive = false;
+            window.removeEventListener('devicemotion', handleMotion);
+
+            const endTime = performance.now();
+            const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
+            
+            // Restore end screen to its normal success state in case of a previous error
+            endScreen.querySelector('h1').textContent = "Cheers!";
+            endScreen.querySelector('p').textContent = "Your Time:";
+            finalTimeDisplay.style.display = 'block';
+            finalTimeDisplay.textContent = `${taken}s`;
+
+            endScreen.classList.remove('hidden');
+        };
+
+        const resetGame = () => {
+            endScreen.classList.add('hidden');
+            // Animate the liquid filling back up
+            liquid.style.transition = 'height 1s ease-in-out';
+            liquid.style.height = '100%';
+            
+            // After fill animation, show the start screen again to allow a full retry
+            setTimeout(() => {
+                // Restore initial start screen text and button state
+                startScreen.querySelector('h1').textContent = "The Drinkable Ad";
+                startScreen.querySelector('p').innerHTML = "Tilt or shake your phone to drink.";
+                startButton.style.display = 'block';
+                startButton.disabled = false;
+                startButton.textContent = 'Tap to Begin';
+                startScreen.classList.remove('hidden');
+            }, 1200);
+        };
+        
+        // Event Listeners
+        startButton.addEventListener('click', startGame);
+        retryButton.addEventListener('click', resetGame);
+    </script>
+</body>
+</html>
+
