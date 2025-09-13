@@ -12,7 +12,7 @@
       --coke-red: #9a0002;
       --coke-white: #efe6de;
       --coke-black: #502616;
-      --coke-dark: #2b0a0a;
+      --coke-dark: #2c0f0a;
     }
 
     body, html {
@@ -35,16 +35,16 @@
       position: relative;
     }
 
-    /* Glass outline */
     .glass {
-      position: relative;
-      width: 90%;
+      width: 70%;
       height: 80%;
-      border: 5px solid rgba(255,255,255,0.6);
-      border-radius: 20px;
+      border: 6px solid rgba(255,255,255,0.6);
+      border-radius: 30px;
+      position: relative;
       overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
       background: rgba(255,255,255,0.05);
-      box-shadow: inset 0 0 15px rgba(255,255,255,0.2);
+      z-index: 5;
     }
 
     #liquid {
@@ -53,9 +53,9 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(to top, var(--coke-dark), var(--coke-black));
+      background: linear-gradient(to top, var(--coke-black), var(--coke-dark));
       transition: height 0.3s ease-out;
-      z-index: 10;
+      z-index: 6;
     }
 
     .bubble {
@@ -64,7 +64,7 @@
       border-radius: 50%;
       bottom: -20px;
       animation: rise 10s infinite ease-in;
-      z-index: 11;
+      z-index: 7;
     }
 
     @keyframes rise {
@@ -74,8 +74,10 @@
 
     .screen {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -84,9 +86,9 @@
       color: var(--coke-white);
       z-index: 100;
       padding: 20px;
+      box-sizing: border-box;
       background-color: var(--coke-red);
       transition: opacity 0.5s ease;
-      font-family: 'Teko', sans-serif;
     }
 
     .screen.hidden {
@@ -94,15 +96,28 @@
       pointer-events: none;
     }
 
-    .screen h1 { font-size: 3rem; margin: 0; text-transform: uppercase; }
-    .screen h2 { font-size: 4rem; margin: 10px 0; }
-    .screen p { font-size: 1.5rem; margin: 0; }
+    .screen h1 {
+      font-size: 3rem;
+      margin: 0.5rem 0;
+    }
+
+    .screen h2 {
+      font-size: 4rem;
+      margin: 0.5rem 0;
+    }
+
+    .screen p {
+      font-size: 1.5rem;
+      margin: 0.5rem 0;
+    }
 
     .btn {
-      margin-top: 30px;
+      margin-top: 20px;
       padding: 15px 40px;
       font-size: 1.8rem;
       font-family: 'Teko', sans-serif;
+      color: var(--coke-red);
+      background-color: var(--coke-white);
       border: none;
       border-radius: 50px;
       cursor: pointer;
@@ -110,21 +125,22 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
       transition: transform 0.1s ease;
     }
+
     .btn:active { transform: scale(0.95); }
 
-    /* Button color variants */
-    .btn-white { color: var(--coke-red); background-color: var(--coke-white); }
-    .btn-red { color: var(--coke-white); background-color: var(--coke-red); border: 2px solid var(--coke-white); }
-    .btn-black { color: var(--coke-white); background-color: var(--coke-black); }
-
     #desktop-warning { display: none; }
+
     @media (min-width: 769px) {
       .game-world { display: none; }
-      #desktop-warning { display: flex; background-color: var(--coke-black); }
+      #desktop-warning {
+        display: flex;
+        background-color: var(--coke-black);
+      }
     }
   </style>
 </head>
 <body>
+
   <div id="desktop-warning" class="screen">
     <h1>This experience is designed for mobile only.</h1>
     <p>Please visit on your smartphone to play.</p>
@@ -138,44 +154,37 @@
     <div id="start-screen" class="screen">
       <h1>Inspired by The Drinkable Ad</h1>
       <p>Tilt or shake your phone to play.</p>
-      <button id="start-button" class="btn btn-white">Tap to Begin</button>
+      <button id="start-button" class="btn">Tap to Begin</button>
     </div>
 
     <div id="end-screen" class="screen hidden">
       <h1>Cheers!</h1>
       <p>Your Time:</p>
       <h2 id="final-time">0.00s</h2>
-      <p id="high-score-text"></p>
-      <button id="retryButton" class="btn btn-black">Try Again</button>
+      <p id="best-time"></p>
+      <button id="retryButton" class="btn">Try Again</button>
     </div>
   </div>
 
   <script>
-    const CONFIG = {
-      motionThreshold: 15,
-      liquidDecrease: 1.5,
-      bubbleCount: 20
-    };
-
     const liquid = document.getElementById('liquid');
     const startScreen = document.getElementById('start-screen');
     const endScreen = document.getElementById('end-screen');
     const startButton = document.getElementById('start-button');
     const retryButton = document.getElementById('retryButton');
     const finalTimeDisplay = document.getElementById('final-time');
-    const highScoreText = document.getElementById('high-score-text');
+    const bestTimeDisplay = document.getElementById('best-time');
 
     let liquidLevel = 100;
     let startTime = 0;
     let gameActive = false;
     let motionEventFired = false;
-
-    const showScreen = (screen) => screen.classList.remove('hidden');
-    const hideScreen = (screen) => screen.classList.add('hidden');
+    const motionThreshold = 15;
 
     const createBubbles = () => {
+      const bubbleCount = 20;
       liquid.querySelectorAll('.bubble').forEach(b => b.remove());
-      for (let i = 0; i < CONFIG.bubbleCount; i++) {
+      for (let i = 0; i < bubbleCount; i++) {
         const bubble = document.createElement('div');
         bubble.classList.add('bubble');
         const size = Math.random() * 15 + 5;
@@ -189,15 +198,6 @@
       }
     };
 
-    const updateHighScore = (time) => {
-      const best = localStorage.getItem('cokeHighScore');
-      if (!best || time < parseFloat(best)) {
-        localStorage.setItem('cokeHighScore', time);
-        return time;
-      }
-      return parseFloat(best);
-    };
-
     const handleMotion = (event) => {
       motionEventFired = true;
       if (!gameActive) return;
@@ -205,36 +205,38 @@
       const accel = event.accelerationIncludingGravity;
       const magnitude = Math.sqrt(accel.x ** 2 + accel.y ** 2 + accel.z ** 2);
 
-      if (magnitude > CONFIG.motionThreshold) {
-        liquidLevel -= CONFIG.liquidDecrease;
+      if (magnitude > motionThreshold) {
+        liquidLevel -= 1.5;
         if (liquidLevel < 0) liquidLevel = 0;
         liquid.style.height = `${liquidLevel}%`;
-
         if (liquidLevel <= 0) endGame();
       }
     };
 
     const startGame = () => {
       startButton.disabled = true;
+
       if (!window.isSecureContext) {
+        const startScreenText = startScreen.querySelector('p');
         startButton.style.display = 'none';
-        startScreen.querySelector('p').innerHTML = "<strong>Error:</strong> HTTPS required.";
+        startScreenText.innerHTML = "<strong>Error:</strong> This experience requires HTTPS.";
         return;
       }
 
-      if (DeviceMotionEvent?.requestPermission) {
-        DeviceMotionEvent.requestPermission().then(state => {
-          if (state === 'granted') {
-            window.addEventListener('devicemotion', handleMotion);
-            runGame();
-          } else {
-            startButton.style.display = 'none';
-            startScreen.querySelector('p').innerHTML = "Motion sensor permission denied.";
-          }
-        }).catch(() => {
-          startButton.style.display = 'none';
-          startScreen.querySelector('p').textContent = "Could not get sensor permissions.";
-        });
+      if (typeof DeviceMotionEvent !== 'undefined' &&
+          typeof DeviceMotionEvent.requestPermission === 'function') {
+        DeviceMotionEvent.requestPermission()
+          .then(permissionState => {
+            if (permissionState === 'granted') {
+              window.addEventListener('devicemotion', handleMotion);
+              runGame();
+            } else {
+              showMotionError("Permission for motion sensors was denied.");
+            }
+          })
+          .catch(() => {
+            showMotionError("Could not get sensor permissions.");
+          });
       } else {
         window.addEventListener('devicemotion', handleMotion);
         runGame();
@@ -244,29 +246,33 @@
     const runGame = () => {
       liquidLevel = 100;
       motionEventFired = false;
+      liquid.style.transition = 'height 0.3s ease-out';
       liquid.style.height = '100%';
-      hideScreen(startScreen);
-      hideScreen(endScreen);
+      startScreen.classList.add('hidden');
+      endScreen.classList.add('hidden');
       createBubbles();
 
       setTimeout(() => {
         gameActive = true;
         startTime = performance.now();
         setTimeout(() => {
-          if (!motionEventFired && gameActive) showMotionError("No motion detected.");
+          if (!motionEventFired && gameActive) {
+            showMotionError("Motion could not be detected. Your device might not support it or access is blocked.");
+          }
         }, 2000);
       }, 500);
     };
 
-    const showMotionError = (msg) => {
+    const showMotionError = (message) => {
       if (!gameActive) return;
       gameActive = false;
       window.removeEventListener('devicemotion', handleMotion);
+
       endScreen.querySelector('h1').textContent = "Oops!";
-      endScreen.querySelector('p').textContent = msg;
+      endScreen.querySelector('p').textContent = message;
       finalTimeDisplay.style.display = 'none';
-      highScoreText.style.display = 'none';
-      showScreen(endScreen);
+      bestTimeDisplay.style.display = 'none';
+      endScreen.classList.remove('hidden');
     };
 
     const endGame = () => {
@@ -277,30 +283,34 @@
       const endTime = performance.now();
       const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
 
-      // Reset to normal success state
       endScreen.querySelector('h1').textContent = "Cheers!";
       endScreen.querySelector('p').textContent = "Your Time:";
       finalTimeDisplay.style.display = 'block';
       finalTimeDisplay.textContent = `${timeTaken}s`;
 
-      const bestTime = updateHighScore(timeTaken);
-      highScoreText.style.display = 'block';
-      highScoreText.textContent = `Best Time: ${bestTime.toFixed(2)}s`;
+      let best = localStorage.getItem('cokeHighScore');
+      if (!best || parseFloat(timeTaken) < parseFloat(best)) {
+        localStorage.setItem('cokeHighScore', timeTaken);
+        best = timeTaken;
+      }
+      bestTimeDisplay.style.display = 'block';
+      bestTimeDisplay.textContent = `Best Time: ${best}s`;
 
-      showScreen(endScreen);
+      endScreen.classList.remove('hidden');
     };
 
     const resetGame = () => {
-      hideScreen(endScreen);
+      endScreen.classList.add('hidden');
       liquid.style.transition = 'height 1s ease-in-out';
       liquid.style.height = '100%';
+
       setTimeout(() => {
         startScreen.querySelector('h1').textContent = "Inspired by The Drinkable Ad";
         startScreen.querySelector('p').innerHTML = "Tilt or shake your phone to play.";
         startButton.style.display = 'block';
         startButton.disabled = false;
         startButton.textContent = 'Tap to Begin';
-        showScreen(startScreen);
+        startScreen.classList.remove('hidden');
       }, 1200);
     };
 
