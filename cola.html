@@ -1,244 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Inspired by The Drinkable Ad</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --coke-red: #e41a1c;
-      --coke-white: #ffffff;
-      --coke-dark: #1c1c1c;
-    }
-    body {
-      margin: 0;
-      height: 100vh;
-      background: var(--coke-dark);
-      font-family: 'Teko', sans-serif;
-      color: var(--coke-white);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .screen {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      background: rgba(28,28,28,0.95); /* start screen visible */
-      opacity: 1;
-      transition: opacity 0.5s ease, transform 0.3s ease;
-      z-index: 10;
-    }
-    .hidden {
-      opacity: 0;
-      pointer-events: none;
-      transform: scale(0.95);
-    }
-    .glass {
-      width: 90vw;
-      max-width: 400px;
-      height: 60vh;
-      position: relative;
-      overflow: hidden;
-      border-radius: 0;
-      background: none; /* remove overlay to avoid gray */
-      border: none;
-    }
-    #liquid {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(to top, #4b0000 0%, var(--coke-red) 70%, rgba(255,255,255,0.6) 100%);
-      transition: height 0.3s ease-out;
-    }
-    .bubble {
-      position: absolute;
-      bottom: 0;
-      background: rgba(255,255,255,0.8);
-      border-radius: 50%;
-      animation: rise linear infinite;
-    }
-    @keyframes rise {
-      0% { transform: translateY(0) translateX(0); opacity: 1; }
-      100% { transform: translateY(-120%) translateX(var(--x-offset, 0px)); opacity: 0; }
-    }
-    h1, h2, p {
-      margin: 10px 0;
-    }
-    .btn {
-      padding: 12px 24px;
-      margin-top: 20px;
-      border: none;
-      border-radius: 8px;
-      background: var(--coke-red);
-      color: var(--coke-white);
-      font-size: 24px;
-      cursor: pointer;
-      transition: transform 0.2s, background 0.3s;
-      text-transform: uppercase;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
-    .btn:active {
-      transform: scale(0.95);
-    }
-    @media (min-width: 769px) {
-      body::before {
-        content: "This experience is designed for mobile only. Please visit on your smartphone to play.";
-        color: var(--coke-white);
-        text-align: center;
-        padding: 20px;
-      }
-      .screen, .glass { display: none; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coca-Cola Drinkable Ad Game</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@300;400;500;600;700&display=swap');
+:root { --coke-red:#C41E3A;--coke-white:#FFF;--coke-black:#000;--coke-dark:#8B1538; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Teko',sans-serif;background:linear-gradient(135deg,var(--coke-red) 0%,var(--coke-dark) 100%);height:100vh;overflow:hidden;position:relative;color:var(--coke-white);}
+.desktop-warning{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:var(--coke-red);color:var(--coke-white);justify-content:center;align-items:center;flex-direction:column;text-align:center;z-index:1000;padding:2rem;}
+@media(min-width:769px){.desktop-warning{display:flex;}}
+.desktop-warning h1{font-size:3rem;font-weight:700;margin-bottom:2rem;text-transform:uppercase;}
+.desktop-warning p{font-size:1.5rem;font-weight:400;line-height:1.4;}
+.game-container{position:relative;width:100%;height:100vh;display:flex;justify-content:center;align-items:center;}
+.glass{position:relative;width:280px;height:500px;border:4px solid rgba(255,255,255,0.3);border-radius:20px 20px 40px 40px;background:linear-gradient(135deg,rgba(255,255,255,0.15) 0%,rgba(255,255,255,0.05) 50%,rgba(255,255,255,0.1) 100%);box-shadow:inset 0 0 30px rgba(255,255,255,0.2),inset -10px 0 20px rgba(255,255,255,0.1),0 0 40px rgba(0,0,0,0.3),0 20px 60px rgba(0,0,0,0.2);overflow:hidden;backdrop-filter:blur(10px);transform:perspective(800px) rotateX(5deg);}
+#liquid{position:absolute;bottom:0;left:0;width:100%;height:100%;background:linear-gradient(180deg, rgba(139,69,19,0.3) 0%, rgba(139,69,19,0.5) 10%, rgba(101,67,33,0.8) 25%, #654321 40%, #4A2C17 70%, #2F1B14 90%, #1A0F0A 100%);transition:height 0.3s ease-out;border-radius:0 0 16px 16px;box-shadow:inset 0 0 20px rgba(0,0,0,0.3);}
+.bubble{position:absolute;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,0.8),rgba(255,255,255,0.3));border-radius:50%;animation:rise 4s infinite linear;transform:translateX(var(--x-offset,0px));transition:all 0.2s ease-out;}
+.bubble.bursting{animation:burst 0.3s ease-out forwards;}
+@keyframes burst{0%{transform:scale(1) translateX(var(--x-offset,0px));opacity:1;}50%{transform:scale(1.5) translateX(var(--x-offset,0px));opacity:0.7;}100%{transform:scale(2) translateX(var(--x-offset,0px));opacity:0;}}
+.ice-cube{position:absolute;background:linear-gradient(135deg,rgba(255,255,255,0.4) 0%,rgba(255,255,255,0.2) 30%,rgba(255,255,255,0.1) 70%,rgba(255,255,255,0.3) 100%);border:1px solid rgba(255,255,255,0.3);border-radius:8px;box-shadow:inset 0 0 10px rgba(255,255,255,0.2),0 2px 8px rgba(0,0,0,0.2);backdrop-filter:blur(2px);animation:float 6s ease-in-out infinite;transform-origin:center;}
+@keyframes float{0%,100%{transform:translateY(0px) translateX(0px) rotate(0deg);}20%{transform:translateY(-8px) translateX(3px) rotate(2deg);}40%{transform:translateY(-12px) translateX(-2px) rotate(-1deg);}60%{transform:translateY(-15px) translateX(4px) rotate(1.5deg);}80%{transform:translateY(-8px) translateX(-1px) rotate(-0.5deg);}}
+@keyframes rise{0%{bottom:-20px;opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{bottom:520px;opacity:0;}}
+.screen{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;justify-content:center;align-items:center;flex-direction:column;text-align:center;z-index:100;padding:2rem;transition:opacity 0.5s ease,visibility 0.5s ease;background:rgba(0,0,0,0.8);}
+.screen.hidden{opacity:0;visibility:hidden;}
+.screen h1{font-size:3.5rem;font-weight:700;margin-bottom:1rem;text-transform:uppercase;color:var(--coke-red);text-shadow:2px 2px 4px rgba(0,0,0,0.5);}
+.screen h2{font-size:2rem;font-weight:500;margin-bottom:2rem;text-transform:uppercase;color:var(--coke-white);}
+.screen p{font-size:1.3rem;font-weight:400;margin-bottom:1rem;text-transform:uppercase;color:var(--coke-white);}
+.time-display{font-size:1.8rem;font-weight:600;margin:1rem 0;color:var(--coke-red);text-transform:uppercase;}
+.error-message{color:#ff6b6b;font-size:1.2rem;margin-top:1rem;text-transform:none;line-height:1.4;}
+.btn{font-family:'Teko',sans-serif;font-size:1.5rem;font-weight:600;text-transform:uppercase;padding:1rem 2rem;border:none;border-radius:25px;cursor:pointer;transition:transform 0.2s ease,box-shadow 0.2s ease,opacity 0.2s ease;margin:1rem;min-width:200px;box-shadow:0 4px 15px rgba(0,0,0,0.3);}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.4);}
+.btn:active{transform:scale(0.95);}
+.btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+.btn-white{background:var(--coke-white);color:var(--coke-red);}
+.btn-red{background:var(--coke-red);color:var(--coke-white);}
+.btn-black{background:var(--coke-black);color:var(--coke-white);}
+</style>
 </head>
 <body>
-
-  <!-- Start Screen -->
-  <div id="startScreen" class="screen">
-    <h1>Inspired by The Drinkable Ad</h1>
-    <p>Tilt or shake your phone to play.</p>
-    <button class="btn" id="startBtn">Tap to Begin</button>
-  </div>
-
-  <!-- Game Area -->
-  <div id="gameScreen" class="screen hidden">
-    <div class="glass">
-      <div id="liquid"></div>
-    </div>
-  </div>
-
-  <!-- End Screen -->
-  <div id="endScreen" class="screen hidden">
-    <h1 id="endTitle">Cheers!</h1>
-    <p id="endMessage">Your Time:</p>
-    <h2 id="finalTime">0.00s</h2>
-    <p id="bestTime"></p>
-    <button class="btn" id="retryBtn">Retry</button>
-  </div>
-
-  <script>
-    const startScreen = document.getElementById('startScreen');
-    const gameScreen = document.getElementById('gameScreen');
-    const endScreen = document.getElementById('endScreen');
-    const liquid = document.getElementById('liquid');
-    const finalTimeDisplay = document.getElementById('finalTime');
-    const bestTimeDisplay = document.getElementById('bestTime');
-    const startBtn = document.getElementById('startBtn');
-    const retryBtn = document.getElementById('retryBtn');
-    const endTitle = document.getElementById('endTitle');
-    const endMessage = document.getElementById('endMessage');
-
-    let startTime, gameActive = false, motionEventFired = false, liquidLevel = 100;
-
-    function showScreen(show, hide1, hide2) {
-      if (hide1) hide1.classList.add('hidden');
-      if (hide2) hide2.classList.add('hidden');
-      setTimeout(() => { show.classList.remove('hidden'); }, 50);
-    }
-
-    function startGame() {
-      motionEventFired = false;
-      liquidLevel = 100;
-      liquid.style.height = "100%";
-      startTime = performance.now();
-      gameActive = true;
-
-      showScreen(gameScreen, startScreen, endScreen);
-
-      setTimeout(() => { if (!motionEventFired) showMotionError(); }, 2000);
-
-      window.addEventListener('devicemotion', handleMotion);
-    }
-
-    function handleMotion(event) {
-      motionEventFired = true;
-      if (!gameActive) return;
-      const acc = event.accelerationIncludingGravity;
-      if (!acc) return;
-
-      const magnitude = Math.sqrt(acc.x*acc.x + acc.y*acc.y + acc.z*acc.z);
-      if (magnitude > 15) {
-        liquidLevel = Math.max(0, liquidLevel - 1.5);
-        liquid.style.height = liquidLevel + "%";
-        if (liquidLevel <= 0) endGame();
-      }
-    }
-
-    function endGame() {
-      if (!gameActive) return;
-      gameActive = false;
-      window.removeEventListener('devicemotion', handleMotion);
-
-      const endTime = performance.now();
-      const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
-
-      endTitle.textContent = "Cheers!";
-      endMessage.textContent = "Your Time:";
-      finalTimeDisplay.style.display = 'block';
-      finalTimeDisplay.textContent = `${timeTaken}s`;
-
-      let best = localStorage.getItem('cokeHighScore');
-      if (!best || parseFloat(timeTaken) < parseFloat(best)) {
-        localStorage.setItem('cokeHighScore', timeTaken);
-        best = timeTaken;
-      }
-      bestTimeDisplay.textContent = `Best Time: ${best}s`;
-
-      showScreen(endScreen, gameScreen, null);
-    }
-
-    function showMotionError() {
-      if (!gameActive) return;
-      gameActive = false;
-      window.removeEventListener('devicemotion', handleMotion);
-
-      endTitle.textContent = "Oops!";
-      endMessage.textContent = "Motion not detected.";
-      finalTimeDisplay.style.display = 'none';
-      bestTimeDisplay.textContent = "";
-
-      showScreen(endScreen, gameScreen, null);
-    }
-
-    startBtn.addEventListener('click', async () => {
-      if (typeof DeviceMotionEvent.requestPermission === 'function') {
-        try {
-          const permission = await DeviceMotionEvent.requestPermission();
-          if (permission === 'granted') startGame();
-          else alert("Motion permission denied.");
-        } catch (e) { alert("Error requesting motion permission."); }
-      } else {
-        startGame();
-      }
-    });
-
-    retryBtn.addEventListener('click', () => { showScreen(startScreen, endScreen, gameScreen); });
-
-    function createBubbles() {
-      const glass = document.querySelector('.glass');
-      for (let i = 0; i < 30; i++) {
-        const bubble = document.createElement('div');
-        bubble.classList.add('bubble');
-        const size = Math.random() * 15 + 5;
-        bubble.style.width = size + 'px';
-        bubble.style.height = size + 'px';
-        bubble.style.left = `${Math.random() * 100}%`;
-        bubble.style.setProperty('--x-offset', `${Math.random() * 30 - 15}px`);
-        bubble.style.animationDuration = (Math.random() * 3 + 2) + 's';
-        bubble.style.animationDelay = `${Math.random() * 2}s`;
-        glass.appendChild(bubble);
-      }
-    }
-    createBubbles();
-  </script>
+<div class="desktop-warning">
+<h1>📱 Mobile Only</h1>
+<p>This experience is designed for mobile only.</p>
+<p>Please visit on your smartphone to play.</p>
+</div>
+<div class="game-container">
+<div class="glass"><div id="liquid"></div></div>
+</div>
+<div class="screen" id="startScreen">
+<h1>🥤 Coca-Cola</h1>
+<h2>Inspired by The Drinkable Ad</h2>
+<p>Tap red border or shake to drink.</p>
+<button class="btn btn-white" id="startBtn">Begin</button>
+<div class="error-message" id="startError"></div>
+</div>
+<div class="screen hidden" id="endScreen">
+<h1 id="endTitle">🎉 Cheers!</h1>
+<div class="time-display" id="finalTime">Your Time: 0.00s</div>
+<div class="time-display" id="bestTime">Best Time: --</div>
+<button class="btn btn-red" id="retryBtn">Try Again</button>
+<div class="error-message" id="endError"></div>
+</div>
+<script>
+class CocaColaGame{
+  constructor(){
+    this.liquidLevel=100;
+    this.gameActive=false;
+    this.startTime=null;
+    this.motionThreshold=15;
+    this.drainRate=1.5;
+    this.bubbles=[];
+    this.iceCubes=[];
+    this.liquid=document.getElementById('liquid');
+    this.startScreen=document.getElementById('startScreen');
+    this.endScreen=document.getElementById('endScreen');
+    this.startBtn=document.getElementById('startBtn');
+    this.retryBtn=document.getElementById('retryBtn');
+    this.finalTime=document.getElementById('finalTime');
+    this.bestTime=document.getElementById('bestTime');
+    this.endTitle=document.getElementById('endTitle');
+    this.startError=document.getElementById('startError');
+    this.endError=document.getElementById('endError');
+    this.init();
+  }
+  init(){
+    this.startBtn.addEventListener('click',()=>this.requestPermissionAndStart());
+    this.retryBtn.addEventListener('click',()=>this.resetGame());
+    this.updateBestTimeDisplay();
+    this.createBubbles();
+    this.createIceCubes();
+  }
+  createBubbles(){for(let i=0;i<4;i++){this.createSingleBubble();}}
+  createSingleBubble(){const bubble=document.createElement('div');bubble.className='bubble';const size=Math.random()*15+5;bubble.style.width=`${size}px`;bubble.style.height=`${size}px`;const leftPos=Math.random()*80+10;bubble.style.left=`${leftPos}%`;const drift=(Math.random()-0.5)*8;bubble.style.setProperty('--x-offset',`${drift}px`);const delay=Math.random()*4;const duration=Math.random()*2+3;bubble.style.animationDelay=`${delay}s`;bubble.style.animationDuration=`${duration}s`;this.liquid.appendChild(bubble);this.bubbles.push(bubble);}
+  createIceCubes(){const glassContainer=document.querySelector('.glass');const numCubes=Math.floor(Math.random()*3)+7;for(let i=0;i<numCubes;i++){const iceCube=document.createElement('div');iceCube.className='ice-cube';const width=Math.random()*20+25;const height=Math.random()*20+25;iceCube.style.width=`${width}px`;iceCube.style.height=`${height}px`;const leftPos=(i/(numCubes-1))*70+15+(Math.random()-0.5)*10;iceCube.style.left=`${Math.max(10,Math.min(85,leftPos))}%`;const topPos=5+Math.random()*10;iceCube.style.top=`${topPos}%`;iceCube.dataset.initialTop=topPos;const rotation=Math.random()*30-15;iceCube.style.transform=`rotate(${rotation}deg)`;const delay=Math.random()*4;const duration=Math.random()*3+3;iceCube.style.animationDelay=`${delay}s`;iceCube.style.animationDuration=`${duration}s`;const borderRadius=`${Math.random()*5+6}px ${Math.random()*5+6}px ${Math.random()*5+6}px ${Math.random()*5+6}px`;iceCube.style.borderRadius=borderRadius;glassContainer.appendChild(iceCube);this.iceCubes.push(iceCube);}}
+  updateIceCubePositions(){const liquidTopPosition=100-this.liquidLevel;this.iceCubes.forEach(cube=>{const cubeHeight=parseFloat(cube.style.height);const glassHeight=500;const cubeHeightPercent=(cubeHeight/glassHeight)*100;let newTop=liquidTopPosition-(cubeHeightPercent/2);const maxTop=85-cubeHeightPercent;if(newTop>maxTop)newTop=maxTop;if(newTop<0)newTop=0;cube.style.top=`${newTop}%`;});}
+  requestPermissionAndStart(){
+    if(typeof DeviceMotionEvent!=='undefined' && typeof DeviceMotionEvent.requestPermission==='function'){
+      DeviceMotionEvent.requestPermission().then(response=>{if(response==='granted'){this.startGame();}else{this.showStartError('Motion permission denied. You can still tap to play.');this.startGame();}}).catch(()=>{this.showStartError('Motion permission not available. You can still tap to play.');this.startGame();});
+    }else{this.startGame();}
+  }
+  startGame(){
+    this.gameActive=true;
+    this.liquidLevel=100;
+    this.startTime=performance.now();
+    this.startScreen.classList.add('hidden');
+    this.liquid.style.height='100%';
+    this.liquid.style.transition='height 0.3s ease-out';
+    this.boundHandleTap=this.handleTap.bind(this);
+    document.addEventListener('touchstart',this.boundHandleTap);
+    document.addEventListener('click',this.boundHandleTap);
+    // Motion
+    this.boundHandleMotion=this.handleMotion.bind(this);
+    window.addEventListener('devicemotion',this.boundHandleMotion);
+    this.gameLoop();
+  }
+  handleTap(e){if(!this.gameActive)return;e.preventDefault();this.burstRandomBubble();this.liquidLevel-=this.drainRate;if(this.liquidLevel<=0){this.liquidLevel=0;this.endGame(false);}this.liquid.style.height=`${this.liquidLevel}%`;this.updateIceCubePositions();}
+  handleMotion(event){if(!this.gameActive)return;const acc=event.accelerationIncludingGravity;if(!acc)return;const total=Math.sqrt(acc.x*acc.x+acc.y*acc.y+acc.z*acc.z);if(total>this.motionThreshold){this.handleTap(new Event('motion'));}}
+  burstRandomBubble(){const avail=this.bubbles.filter(b=>!b.classList.contains('bursting')&&b.parentNode);if(avail.length>0){const randomBubble=avail[Math.floor(Math.random()*avail.length)];randomBubble.classList.add('bursting');setTimeout(()=>{if(randomBubble.parentNode)randomBubble.remove();this.createSingleBubble();},300);}}
+  gameLoop(){if(!this.gameActive)return;requestAnimationFrame(()=>this.gameLoop());}
+  endGame(isError=false,errorMessage=''){this.gameActive=false;document.removeEventListener('touchstart',this.boundHandleTap);document.removeEventListener('click',this.boundHandleTap);window.removeEventListener('devicemotion',this.boundHandleMotion);if(isError){this.endTitle.textContent='😕 Oops!';this.finalTime.style.display='none';this.endError.textContent=errorMessage;}else{const endTime=performance.now();const total=((endTime-this.startTime)/1000).toFixed(2);this.endTitle.textContent='🎉 Cheers!';this.finalTime.textContent=`Your Time: ${total}s`;this.finalTime.style.display='block';this.endError.textContent='';this.updateBestTime(parseFloat(total));}this.endScreen.classList.remove('hidden');}
+  updateBestTime(currentTime){const bestTime=localStorage.getItem('cokeHighScore');if(!bestTime||currentTime<parseFloat(bestTime)){localStorage.setItem('cokeHighScore',currentTime.toString());}this.updateBestTimeDisplay();}
+  updateBestTimeDisplay(){const bestTime=localStorage.getItem('cokeHighScore');this.bestTime.textContent=bestTime?`Best Time: ${parseFloat(bestTime).toFixed(2)}s`:'Best Time: --';}
+  showStartError(msg){this.startError.textContent=msg;}
+  resetGame(){this.gameActive=false;this.liquidLevel=100;this.startTime=null;this.liquid.style.transition='height 1s ease-in-out';this.liquid.style.height='100%';this.endScreen.classList.add('hidden');this.startScreen.classList.remove('hidden');this.startBtn.disabled=false;this.startError.textContent='';this.endError.textContent='';this.finalTime.style.display='block';document.removeEventListener('touchstart',this.boundHandleTap);document.removeEventListener('click',this.boundHandleTap);window.removeEventListener('devicemotion',this.boundHandleMotion);this.iceCubes.forEach(cube=>{if(cube.parentNode)cube.remove();});this.iceCubes=[];this.createIceCubes();setTimeout(()=>{this.liquid.style.transition='height 0.3s ease-out';},1000);}
+}
+document.addEventListener('DOMContentLoaded',()=>{new CocaColaGame();});
+document.addEventListener('touchmove',e=>{e.preventDefault();},{passive:false});
+document.addEventListener('gesturestart',e=>{e.preventDefault();});
+document.addEventListener('gesturechange',e=>{e.preventDefault();});
+document.addEventListener('gestureend',e=>{e.preventDefault();});
+</script>
 </body>
 </html>
