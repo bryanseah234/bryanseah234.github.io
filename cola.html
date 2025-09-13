@@ -3,255 +3,175 @@
 <head>
   <meta charset="UTF-8">
   <title>Inspired by The Drinkable Ad</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --coke-red: #e41a1c;
-      --coke-white: #ffffff;
-      --coke-black: #000000;
-      --coke-dark: #1c1c1c;
-    }
-    body {
+    body, html {
       margin: 0;
-      height: 100vh;
-      background: var(--coke-dark);
-      font-family: 'Teko', sans-serif;
-      color: var(--coke-white);
+      padding: 0;
+      height: 100%;
       overflow: hidden;
+      background: #111;
+      font-family: Arial, sans-serif;
       display: flex;
-      align-items: center;
       justify-content: center;
-      position: relative;
+      align-items: center;
     }
-    .screen {
+
+    #gameContainer {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #222;
+    }
+
+    canvas {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      width: 100%;
+      height: 100%;
+    }
+
+    .overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      text-align: center;
-      background: var(--coke-dark);
-      opacity: 1;
-      transition: opacity 0.5s ease;
+      color: white;
+      background: rgba(0,0,0,0.85);
+      transition: opacity 0.8s ease;
       z-index: 10;
     }
-    .hidden {
+
+    .overlay.hidden {
       opacity: 0;
       pointer-events: none;
     }
-    /* Liquid fills whole width */
-    #liquid {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--coke-red);
-      transition: height 0.8s ease-in-out;
-      z-index: 1;
+
+    h1, p {
+      margin: 10px;
+      text-align: center;
     }
-    .bubble {
-      position: absolute;
-      bottom: 0;
-      background: rgba(255,255,255,0.8);
-      border-radius: 50%;
-      animation: rise 4s linear infinite;
-      z-index: 2;
-    }
-    @keyframes rise {
-      0% { transform: translateY(0) translateX(0); opacity: 1; }
-      100% { transform: translateY(-120vh) translateX(var(--x-offset, 0px)); opacity: 0; }
-    }
-    h1, h2, p {
-      margin: 10px 0;
-      z-index: 20;
-    }
-    .btn {
-      padding: 12px 24px;
+
+    button {
       margin-top: 20px;
+      padding: 12px 24px;
       border: none;
-      border-radius: 8px;
-      background: var(--coke-red);
-      color: var(--coke-white);
-      font-size: 24px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-family: inherit;
       cursor: pointer;
-      transition: transform 0.2s, background 0.3s;
-      text-transform: uppercase;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      z-index: 20;
+      color: white;
     }
-    .btn:active {
-      transform: scale(0.95);
-    }
-    @media (min-width: 769px) {
-      body::before {
-        content: "This experience is designed for mobile only. Please visit on your smartphone to play.";
-        color: var(--coke-white);
-        text-align: center;
-        padding: 20px;
-      }
-      .screen, #liquid, .bubble { display: none; }
-    }
+
+    .btn1 { background: #d32f2f; }
+    .btn2 { background: #1976d2; }
+    .btn3 { background: #388e3c; }
   </style>
 </head>
 <body>
+  <div id="gameContainer">
+    <canvas id="liquid"></canvas>
 
-  <!-- Liquid background -->
-  <div id="liquid"></div>
+    <div id="startScreen" class="overlay">
+      <h1>Inspired by The Drinkable Ad</h1>
+      <p>Tilt or shake your phone to play.</p>
+      <button id="startBtn" class="btn1">Tap to Begin</button>
+    </div>
 
-  <!-- Start Screen -->
-  <div id="startScreen" class="screen">
-    <h1>Inspired by The Drinkable Ad</h1>
-    <p>Tilt or shake your phone to play.</p>
-    <button class="btn" id="startBtn">Tap to Begin</button>
-  </div>
-
-  <!-- Game Screen -->
-  <div id="gameScreen" class="screen hidden"></div>
-
-  <!-- End Screen -->
-  <div id="endScreen" class="screen hidden">
-    <h1 id="endTitle">Cheers!</h1>
-    <p id="endMessage">Your Time:</p>
-    <h2 id="finalTime">0.00s</h2>
-    <p id="bestTime"></p>
-    <button class="btn" id="retryBtn">Retry</button>
+    <div id="endScreen" class="overlay hidden">
+      <h1>Finished!</h1>
+      <p id="scoreText"></p>
+      <p id="bestText"></p>
+      <button id="retryBtn" class="btn2">Retry</button>
+    </div>
   </div>
 
   <script>
-    const startScreen = document.getElementById('startScreen');
-    const gameScreen = document.getElementById('gameScreen');
-    const endScreen = document.getElementById('endScreen');
-    const liquid = document.getElementById('liquid');
-    const finalTimeDisplay = document.getElementById('finalTime');
-    const bestTimeDisplay = document.getElementById('bestTime');
-    const startBtn = document.getElementById('startBtn');
-    const retryBtn = document.getElementById('retryBtn');
-    const endTitle = document.getElementById('endTitle');
-    const endMessage = document.getElementById('endMessage');
+    const canvas = document.getElementById('liquid');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let liquidHeight, startTime, endTime;
+    let bestTime = localStorage.getItem("bestTime") || null;
+    let running = false;
 
-    let startTime, gameActive = false, motionEventFired = false, liquidLevel = 100;
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      liquidHeight = height;
+    }
+    window.addEventListener('resize', resize);
+    resize();
 
-    function showScreen(show, hide1, hide2) {
-      if (hide1) hide1.classList.add('hidden');
-      if (hide2) hide2.classList.add('hidden');
-      setTimeout(() => {
-        show.classList.remove('hidden');
-      }, 50);
+    function drawLiquid() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Gradient liquid
+      let gradient = ctx.createLinearGradient(0, height, 0, height - liquidHeight);
+      gradient.addColorStop(0, "#2b0a04"); // dark brown bottom
+      gradient.addColorStop(0.7, "#6d1f0e"); // mid caramel
+      gradient.addColorStop(1, "#b3471c"); // light with fizz at top
+
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, height - liquidHeight, width, liquidHeight);
+
+      // Foam/fizz at the top
+      if (liquidHeight > 0) {
+        ctx.fillStyle = "rgba(255, 245, 230, 0.9)";
+        ctx.beginPath();
+        ctx.ellipse(width / 2, height - liquidHeight - 10, width / 2, 15, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function update() {
+      if (running) {
+        if (liquidHeight > 0) {
+          liquidHeight -= 1; // speed
+        } else {
+          finishGame();
+        }
+      }
+      drawLiquid();
+      requestAnimationFrame(update);
     }
 
     function startGame() {
-      motionEventFired = false;
-      liquidLevel = 100;
-      liquid.style.height = "100%";
-      startTime = performance.now();
-      gameActive = true;
-
-      showScreen(gameScreen, startScreen, endScreen);
-
-      setTimeout(() => {
-        if (!motionEventFired) {
-          showMotionError();
-        }
-      }, 2000);
-
-      window.addEventListener('devicemotion', handleMotion);
+      startTime = Date.now();
+      liquidHeight = height;
+      running = true;
+      fadeOut(document.getElementById("startScreen"));
+      fadeOut(document.getElementById("endScreen"));
     }
 
-    function handleMotion(event) {
-      motionEventFired = true;
-      if (!gameActive) return;
-
-      const acc = event.accelerationIncludingGravity;
-      if (!acc) return;
-
-      const magnitude = Math.sqrt(acc.x*acc.x + acc.y*acc.y + acc.z*acc.z);
-
-      if (magnitude > 15) {
-        liquidLevel = Math.max(0, liquidLevel - 1.5);
-        liquid.style.height = liquidLevel + "%";
-
-        if (liquidLevel <= 0) {
-          endGame();
-        }
+    function finishGame() {
+      running = false;
+      endTime = Date.now();
+      let timeTaken = ((endTime - startTime) / 1000).toFixed(2);
+      if (!bestTime || timeTaken < bestTime) {
+        bestTime = timeTaken;
+        localStorage.setItem("bestTime", bestTime);
       }
+      document.getElementById("scoreText").textContent = `Time: ${timeTaken}s`;
+      document.getElementById("bestText").textContent = `Best Time: ${bestTime}s`;
+      fadeIn(document.getElementById("endScreen"));
     }
 
-    function endGame() {
-      if (!gameActive) return;
-      gameActive = false;
-      window.removeEventListener('devicemotion', handleMotion);
-
-      const endTime = performance.now();
-      const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
-
-      endTitle.textContent = "Cheers!";
-      endMessage.textContent = "Your Time:";
-      finalTimeDisplay.style.display = 'block';
-      finalTimeDisplay.textContent = `${timeTaken}s`;
-
-      let best = localStorage.getItem('cokeHighScore');
-      if (!best || parseFloat(timeTaken) < parseFloat(best)) {
-        localStorage.setItem('cokeHighScore', timeTaken);
-        best = timeTaken;
-      }
-      bestTimeDisplay.textContent = `Best Time: ${best}s`;
-
-      showScreen(endScreen, gameScreen, null);
+    function fadeIn(el) {
+      el.classList.remove("hidden");
     }
 
-    function showMotionError() {
-      if (!gameActive) return;
-      gameActive = false;
-      window.removeEventListener('devicemotion', handleMotion);
-
-      endTitle.textContent = "Oops!";
-      endMessage.textContent = "Motion not detected.";
-      finalTimeDisplay.style.display = 'none';
-      bestTimeDisplay.textContent = "";
-
-      showScreen(endScreen, gameScreen, null);
+    function fadeOut(el) {
+      el.classList.add("hidden");
     }
 
-    startBtn.addEventListener('click', async () => {
-      if (typeof DeviceMotionEvent.requestPermission === 'function') {
-        try {
-          const permission = await DeviceMotionEvent.requestPermission();
-          if (permission === 'granted') startGame();
-          else alert("Motion permission denied.");
-        } catch (e) { alert("Error requesting motion permission."); }
-      } else {
-        startGame();
-      }
-    });
+    document.getElementById("startBtn").onclick = startGame;
+    document.getElementById("retryBtn").onclick = startGame;
 
-    retryBtn.addEventListener('click', () => {
-      // animate liquid refill
-      liquid.style.height = "0%";
-      setTimeout(() => {
-        liquid.style.height = "100%";
-      }, 100);
-
-      showScreen(startScreen, endScreen, gameScreen);
-    });
-
-    function createBubbles() {
-      for (let i = 0; i < 30; i++) {
-        const bubble = document.createElement('div');
-        bubble.classList.add('bubble');
-        const size = Math.random() * 15 + 5;
-        bubble.style.width = size + 'px';
-        bubble.style.height = size + 'px';
-        bubble.style.left = Math.random() * window.innerWidth + 'px';
-        bubble.style.setProperty('--x-offset', `${Math.random() * 40 - 20}px`);
-        bubble.style.animationDuration = (Math.random() * 3 + 2) + 's';
-        document.body.appendChild(bubble);
-      }
-    }
-    createBubbles();
+    update();
   </script>
 </body>
 </html>
