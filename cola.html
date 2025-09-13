@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Coca-Cola - Inspired by The Drinkable Ad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --coke-red: #9a0002;
+      --coke-white: #efe6de;
+      --coke-black: #502616;
+      --coke-dark: #2b0a0a;
+    }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--coke-red);
+      font-family: 'Teko', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .game-world {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    /* Glass outline */
+    .glass {
+      position: relative;
+      width: 90%;
+      height: 80%;
+      border: 5px solid rgba(255,255,255,0.6);
+      border-radius: 20px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.05);
+      box-shadow: inset 0 0 15px rgba(255,255,255,0.2);
+    }
+
+    #liquid {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, var(--coke-dark), var(--coke-black));
+      transition: height 0.3s ease-out;
+      z-index: 10;
+    }
+
+    .bubble {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      bottom: -20px;
+      animation: rise 10s infinite ease-in;
+      z-index: 11;
+    }
+
+    @keyframes rise {
+      0% { bottom: -20px; transform: translateX(0); }
+      100% { bottom: 105vh; transform: translateX(calc(var(--x-offset) * 1px)); }
+    }
+
+    .screen {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: var(--coke-white);
+      z-index: 100;
+      padding: 20px;
+      background-color: var(--coke-red);
+      transition: opacity 0.5s ease;
+      font-family: 'Teko', sans-serif;
+    }
+
+    .screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .screen h1 { font-size: 3rem; margin: 0; text-transform: uppercase; }
+    .screen h2 { font-size: 4rem; margin: 10px 0; }
+    .screen p { font-size: 1.5rem; margin: 0; }
+
+    .btn {
+      margin-top: 30px;
+      padding: 15px 40px;
+      font-size: 1.8rem;
+      font-family: 'Teko', sans-serif;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      text-transform: uppercase;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: transform 0.1s ease;
+    }
+    .btn:active { transform: scale(0.95); }
+
+    /* Button color variants */
+    .btn-white { color: var(--coke-red); background-color: var(--coke-white); }
+    .btn-red { color: var(--coke-white); background-color: var(--coke-red); border: 2px solid var(--coke-white); }
+    .btn-black { color: var(--coke-white); background-color: var(--coke-black); }
+
+    #desktop-warning { display: none; }
+    @media (min-width: 769px) {
+      .game-world { display: none; }
+      #desktop-warning { display: flex; background-color: var(--coke-black); }
+    }
+  </style>
+</head>
+<body>
+  <div id="desktop-warning" class="screen">
+    <h1>This experience is designed for mobile only.</h1>
+    <p>Please visit on your smartphone to play.</p>
+  </div>
+
+  <div class="game-world">
+    <div class="glass">
+      <div id="liquid"></div>
+    </div>
+
+    <div id="start-screen" class="screen">
+      <h1>Inspired by The Drinkable Ad</h1>
+      <p>Tilt or shake your phone to play.</p>
+      <button id="start-button" class="btn btn-white">Tap to Begin</button>
+    </div>
+
+    <div id="end-screen" class="screen hidden">
+      <h1>Cheers!</h1>
+      <p>Your Time:</p>
+      <h2 id="final-time">0.00s</h2>
+      <p id="high-score-text"></p>
+      <button id="retryButton" class="btn btn-black">Try Again</button>
+    </div>
+  </div>
+
+  <script>
+    const CONFIG = {
+      motionThreshold: 15,
+      liquidDecrease: 1.5,
+      bubbleCount: 20
+    };
+
+    const liquid = document.getElementById('liquid');
+    const startScreen = document.getElementById('start-screen');
+    const endScreen = document.getElementById('end-screen');
+    const startButton = document.getElementById('start-button');
+    const retryButton = document.getElementById('retryButton');
+    const finalTimeDisplay = document.getElementById('final-time');
+    const highScoreText = document.getElementById('high-score-text');
+
+    let liquidLevel = 100;
+    let startTime = 0;
+    let gameActive = false;
+    let motionEventFired = false;
+
+    const showScreen = (screen) => screen.classList.remove('hidden');
+    const hideScreen = (screen) => screen.classList.add('hidden');
+
+    const createBubbles = () => {
+      liquid.querySelectorAll('.bubble').forEach(b => b.remove());
+      for (let i = 0; i < CONFIG.bubbleCount; i++) {
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+        const size = Math.random() * 15 + 5;
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${Math.random() * 100}%`;
+        bubble.style.animationDuration = `${Math.random() * 5 + 5}s`;
+        bubble.style.animationDelay = `${Math.random() * 5}s`;
+        bubble.style.setProperty('--x-offset', (Math.random() - 0.5) * 100);
+        liquid.appendChild(bubble);
+      }
+    };
+
+    const updateHighScore = (time) => {
+      const best = localStorage.getItem('cokeHighScore');
+      if (!best || time < parseFloat(best)) {
+        localStorage.setItem('cokeHighScore', time);
+        return time;
+      }
+      return parseFloat(best);
+    };
+
+    const handleMotion = (event) => {
+      motionEventFired = true;
+      if (!gameActive) return;
+
+      const accel = event.accelerationIncludingGravity;
+      const magnitude = Math.sqrt(accel.x ** 2 + accel.y ** 2 + accel.z ** 2);
+
+      if (magnitude > CONFIG.motionThreshold) {
+        liquidLevel -= CONFIG.liquidDecrease;
+        if (liquidLevel < 0) liquidLevel = 0;
+        liquid.style.height = `${liquidLevel}%`;
+
+        if (liquidLevel <= 0) endGame();
+      }
+    };
+
+    const startGame = () => {
+      startButton.disabled = true;
+      if (!window.isSecureContext) {
+        startButton.style.display = 'none';
+        startScreen.querySelector('p').innerHTML = "<strong>Error:</strong> HTTPS required.";
+        return;
+      }
+
+      if (DeviceMotionEvent?.requestPermission) {
+        DeviceMotionEvent.requestPermission().then(state => {
+          if (state === 'granted') {
+            window.addEventListener('devicemotion', handleMotion);
+            runGame();
+          } else {
+            startButton.style.display = 'none';
+            startScreen.querySelector('p').innerHTML = "Motion sensor permission denied.";
+          }
+        }).catch(() => {
+          startButton.style.display = 'none';
+          startScreen.querySelector('p').textContent = "Could not get sensor permissions.";
+        });
+      } else {
+        window.addEventListener('devicemotion', handleMotion);
+        runGame();
+      }
+    };
+
+    const runGame = () => {
+      liquidLevel = 100;
+      motionEventFired = false;
+      liquid.style.height = '100%';
+      hideScreen(startScreen);
+      hideScreen(endScreen);
+      createBubbles();
+
+      setTimeout(() => {
+        gameActive = true;
+        startTime = performance.now();
+        setTimeout(() => {
+          if (!motionEventFired && gameActive) showMotionError("No motion detected.");
+        }, 2000);
+      }, 500);
+    };
+
+    const showMotionError = (msg) => {
+      if (!gameActive) return;
+      gameActive = false;
+      window.removeEventListener('devicemotion', handleMotion);
+      endScreen.querySelector('h1').textContent = "Oops!";
+      endScreen.querySelector('p').textContent = msg;
+      finalTimeDisplay.style.display = 'none';
+      highScoreText.style.display = 'none';
+      showScreen(endScreen);
+    };
+
+    const endGame = () => {
+      if (!gameActive) return;
+      gameActive = false;
+      window.removeEventListener('devicemotion', handleMotion);
+
+      const endTime = performance.now();
+      const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
+
+      // Reset to normal success state
+      endScreen.querySelector('h1').textContent = "Cheers!";
+      endScreen.querySelector('p').textContent = "Your Time:";
+      finalTimeDisplay.style.display = 'block';
+      finalTimeDisplay.textContent = `${timeTaken}s`;
+
+      const bestTime = updateHighScore(timeTaken);
+      highScoreText.style.display = 'block';
+      highScoreText.textContent = `Best Time: ${bestTime.toFixed(2)}s`;
+
+      showScreen(endScreen);
+    };
+
+    const resetGame = () => {
+      hideScreen(endScreen);
+      liquid.style.transition = 'height 1s ease-in-out';
+      liquid.style.height = '100%';
+      setTimeout(() => {
+        startScreen.querySelector('h1').textContent = "Inspired by The Drinkable Ad";
+        startScreen.querySelector('p').innerHTML = "Tilt or shake your phone to play.";
+        startButton.style.display = 'block';
+        startButton.disabled = false;
+        startButton.textContent = 'Tap to Begin';
+        showScreen(startScreen);
+      }, 1200);
+    };
+
+    startButton.addEventListener('click', startGame);
+    retryButton.addEventListener('click', resetGame);
+  </script>
+</body>
+</html>
