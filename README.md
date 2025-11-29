@@ -9,7 +9,7 @@ This repository showcases a variety of fun, interactive web applications built w
 ## Features
 
 - **Personal Landing Page** - A simple profile page with interactive buttons and random GitHub avatar generator
-- **Coca-Cola Drinkable Ad Game** - A mobile-first interactive game where users tap or shake their device to "drink" a virtual cola (inspired by Coca-Cola's drinkable ad campaign)
+- **Coca-Cola Drinkable Ad Game** - A mobile-first interactive game where users tap or shake their device to "drink" a virtual cola (inspired by Coca-Cola's drinkable ad campaign). Note: Shake functionality requires HTTPS and device motion permissions
 - **Justin Bieber Believers Fan Page** - An interactive fan site with song voting, live chat simulation, and image gallery with modal viewer
 - **Blackjack Card Game** - A classic casino-style card game implementation
 - **sgRails Landing Page** - A concept landing page for a Singapore train commuting app with modern UI/UX design, featuring AR navigation and real-time alerts
