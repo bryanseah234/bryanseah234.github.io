@@ -744,11 +744,19 @@
 
                 function renderChat() {
                     const chatMessagesContainer = document.getElementById('chat-messages');
-                    chatMessagesContainer.innerHTML = '';
+                    chatMessagesContainer.textContent = '';
                     chatMessages.forEach((msg) => {
                         const messageDiv = document.createElement('div');
                         messageDiv.className = `message ${msg.type}`;
-                        messageDiv.innerHTML = `<div class="message-author">${msg.author}</div><div>${msg.message}</div>`;
+                        const authorDiv = document.createElement('div');
+                        authorDiv.className = 'message-author';
+                        authorDiv.textContent = msg.author;
+
+                        const messageBodyDiv = document.createElement('div');
+                        messageBodyDiv.textContent = msg.message;
+
+                        messageDiv.appendChild(authorDiv);
+                        messageDiv.appendChild(messageBodyDiv);
                         chatMessagesContainer.appendChild(messageDiv);
                     });
                     chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
@@ -791,11 +799,19 @@
 
                 function renderGallery() {
                     const imageGrid = document.getElementById('image-grid');
-                    imageGrid.innerHTML = '';
+                    imageGrid.textContent = '';
                     galleryItems.forEach((item) => {
                         const imageCard = document.createElement('div');
                         imageCard.className = 'image-card';
-                        imageCard.innerHTML = `<img src="${item.img}" alt="${item.title}"><div>${item.title}</div>`;
+                        const image = document.createElement('img');
+                        image.src = item.img;
+                        image.alt = item.title;
+
+                        const caption = document.createElement('div');
+                        caption.textContent = item.title;
+
+                        imageCard.appendChild(image);
+                        imageCard.appendChild(caption);
                         // Add click event to open modal
                         imageCard.addEventListener('click', function(e) {
                             e.stopPropagation();
