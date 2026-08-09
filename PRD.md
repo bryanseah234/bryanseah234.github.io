@@ -1,4 +1,4 @@
-# PRD: bryanseah234.github.io
+# PRD: theprawnorganisation.github.io
 
 ## Overview
 Bryan Seah's early personal GitHub Pages site — a minimal HTML/CSS/JavaScript page serving as his public web presence before building theprawnhome. Contains a profile photo, a placeholder bio, two JavaScript-powered buttons (one useless, one that randomizes the profile photo), and several standalone HTML pages for early hobby projects.
@@ -29,7 +29,7 @@ Bryan Seah's early personal GitHub Pages site — a minimal HTML/CSS/JavaScript 
 - **Hosting**: GitHub Pages
 
 ## Deployment
-Automatically served at `bryanseah234.github.io` via GitHub Pages from `main` branch.
+Automatically served at `theprawnorganisation.github.io` via GitHub Pages from `main` branch.
 
 ## Constraints & Notes
 - **GitHub avatar**: profile image loaded from `avatars.githubusercontent.com/u/66017805` — reflects current GitHub avatar
