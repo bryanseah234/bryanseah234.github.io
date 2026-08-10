@@ -1,5 +1,7 @@
 # theprawnorganisation.github.io
 
+Live demo: see the repository homepage.
+
 A collection of interactive web experiments and mini-projects hosted on GitHub Pages.
 
 ## Description
