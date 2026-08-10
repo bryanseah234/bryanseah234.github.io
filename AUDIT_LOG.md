@@ -6,7 +6,7 @@
 
 | Field | Value |
 |-------|-------|
-| Project Name | bryanseah234.github.io |
+| Project Name | theprawnorganisation.github.io |
 | Language(s) | JavaScript/HTML |
 | Framework(s) | None / Stdlib |
 | Core Purpose | Personal project |

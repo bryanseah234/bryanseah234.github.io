@@ -1,4 +1,4 @@
-# bryanseah234.github.io
+# theprawnorganisation.github.io
 
 A collection of interactive web experiments and mini-projects hosted on GitHub Pages.
 
@@ -26,10 +26,10 @@ This repository showcases a variety of fun, interactive web applications built w
 
 ```bash
 # Clone the repository
-git clone https://github.com/bryanseah234/bryanseah234.github.io.git
+git clone https://github.com/theprawnorganisation/theprawnorganisation.github.io.git
 
 # Navigate to project directory
-cd bryanseah234.github.io
+cd theprawnorganisation.github.io
 
 # Open any HTML file in your browser
 # No build step or dependencies required!
@@ -49,7 +49,7 @@ Or visit the live demo below.
 
 ## Demo
 
-[https://bryanseah234.github.io](https://bryanseah234.github.io)
+[https://theprawnorganisation.github.io](https://theprawnorganisation.github.io)
 
 ## Disclaimer
 
@@ -58,8 +58,4 @@ Or visit the live demo below.
 
 ## License
 
-MIT License
-
----
-
-**Author:** <a href="https://github.com/bryanseah234">bryanseah234</a>
+Apache-2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE).
