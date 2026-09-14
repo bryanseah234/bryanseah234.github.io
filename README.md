@@ -1,4 +1,4 @@
-# theprawnorganisation.github.io
+# Web experiments
 
 Live demo: see the repository homepage.
 
@@ -26,16 +26,8 @@ This repository showcases a variety of fun, interactive web applications built w
 
 ## Installation
 
-```bash
-# Clone the repository
-git clone https://github.com/theprawnorganisation/theprawnorganisation.github.io.git
-
-# Navigate to project directory
-cd theprawnorganisation.github.io
-
-# Open any HTML file in your browser
-# No build step or dependencies required!
-```
+Clone this repository using its **Code** menu, then open any HTML file in the
+checkout with your browser. No build step or dependencies are required.
 
 ## Usage
 
@@ -47,11 +39,12 @@ Simply open any of the HTML files in a web browser:
 - `gamble.html` - Blackjack card game
 - `rails.html` - sgRails landing page
 
-Or visit the live demo below.
+The same pages are available on the repository's GitHub Pages site.
 
 ## Demo
 
-[https://theprawnorganisation.github.io](https://theprawnorganisation.github.io)
+Use the live URL shown in this repository's **Settings → Pages**. The published
+source is the repository root on the `master` branch.
 
 ## Disclaimer
 
