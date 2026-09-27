@@ -1,5 +1,5 @@
 function me() {
-    console.log('hello@hong-yi.me')
+    console.log('contact details are not published in this demo')
 }
 
 function randompfp() {
