@@ -1,7 +1,7 @@
 # PRD: theprawnorganisation.github.io
 
 ## Overview
-Bryan Seah's early personal GitHub Pages site — a minimal HTML/CSS/JavaScript page serving as his public web presence before building theprawnhome. Contains a profile photo, a placeholder bio, two JavaScript-powered buttons (one useless, one that randomizes the profile photo), and several standalone HTML pages for early hobby projects.
+the maintainer's early personal GitHub Pages site — a minimal HTML/CSS/JavaScript page serving as his public web presence before building theprawnhome. Contains a profile photo, a placeholder bio, two JavaScript-powered buttons (one useless, one that randomizes the profile photo), and several standalone HTML pages for early hobby projects.
 
 ## Goals
 - Host a minimal personal web page on GitHub Pages
@@ -36,3 +36,5 @@ Automatically served at `theprawnorganisation.github.io` via GitHub Pages from `
 - **Placeholder bio**: "theres nothing here, why bother.. and why are u stalking my repos?!" — intentionally sparse
 - **Rick roll**: the YouTube link goes to `dQw4w9WgXcQ` (rickroll)
 - **Early project**: predates theprawnhome; kept for historical continuity
+
+Machine-specific values in this document use privacy placeholders.
